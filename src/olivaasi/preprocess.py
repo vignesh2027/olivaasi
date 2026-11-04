@@ -8,6 +8,7 @@ import cv2
 import numpy as np
 
 
+DEWARP_GAIN = 1.01  # keep a dewarp only if text rows get at least this much sharper
 MIN_WIDTH = 1000  # enlarge only very small pages; enlarging blurred photos made Tesseract drop lines (see EVALUATION.md)
 
 
@@ -129,6 +130,79 @@ def skew_angle(gray: np.ndarray) -> float:
         if s > best_score:
             best, best_score = float(a), s
     return best if best_score > 1.10 * base else 0.0
+
+
+def _row_sharpness(ink: np.ndarray) -> float:
+    return float(np.var(ink.sum(axis=1, dtype=np.float64)))
+
+
+def dewarp(gray: np.ndarray) -> tuple[np.ndarray, float]:
+    """Straighten text lines that bend, as on a page curving into a book's spine.
+
+    The page is cut into vertical strips and horizontal bands. In each band,
+    each strip's row profile is matched against its neighbour's to find how
+    far its text lines are shifted up or down; the shifts become a smooth
+    vertical displacement field that is undone with a remap. The result is
+    kept only if the text rows get clearly sharper. Returns the image and the
+    largest correction in pixels (0 when nothing was changed).
+    """
+    h, w = gray.shape
+    scale = min(1.0, 1000 / max(h, w))
+    small = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
+    ink = (letter_mask(small) > 0).astype(np.float32)
+    sh, sw = ink.shape
+    nx, ny, reach = 12, 6, 8
+    xs = np.linspace(0, sw, nx + 1).astype(int)
+    ys = np.linspace(0, sh, ny + 1).astype(int)
+    dy = np.full((ny, nx), np.nan, np.float32)
+    for j in range(ny):
+        y0, y1 = max(0, ys[j] - reach), min(sh, ys[j + 1] + reach)
+        profs = [cv2.GaussianBlur(ink[y0:y1, xs[i] : xs[i + 1]].sum(axis=1).reshape(-1, 1), (1, 5), 1.5).ravel() for i in range(nx)]
+        has = [p.sum() > 0.02 * (y1 - y0) * (xs[1] - xs[0]) for p in profs]
+        filled = [i for i in range(nx) if has[i]]
+        if len(filled) < 3:
+            continue
+        c = filled[len(filled) // 2]
+        dy[j, c] = 0.0
+        for order in (range(c + 1, nx), range(c - 1, -1, -1)):
+            prev = c
+            for i in order:
+                if not has[i]:
+                    continue
+                a, b = profs[prev], profs[i]
+                best, best_s = -1.0, 0
+                for sft in range(-reach, reach + 1):
+                    if sft >= 0:
+                        v = float(np.dot(a[: len(a) - sft], b[sft:]))
+                    else:
+                        v = float(np.dot(a[-sft:], b[: len(b) + sft]))
+                    if v > best:
+                        best, best_s = v, sft
+                dy[j, i] = dy[j, prev] + best_s
+                prev = i
+    if np.isnan(dy).all():
+        return gray, 0.0
+    for j in range(ny):  # fill strips without text from their neighbours
+        row = dy[j]
+        known = np.nonzero(~np.isnan(row))[0]
+        if len(known):
+            dy[j] = np.interp(np.arange(nx), known, row[known])
+    for i in range(nx):
+        col = dy[:, i]
+        known = np.nonzero(~np.isnan(col))[0]
+        dy[:, i] = np.interp(np.arange(ny), known, col[known]) if len(known) else 0
+    dy -= np.median(dy)
+    if np.abs(dy).max() < 1.0:
+        return gray, 0.0
+    field_small = cv2.resize(cv2.GaussianBlur(dy, (3, 3), 0.8), (sw, sh), interpolation=cv2.INTER_CUBIC)
+    gx, gy = np.meshgrid(np.arange(sw, dtype=np.float32), np.arange(sh, dtype=np.float32))
+    test = cv2.remap(ink, gx, gy + field_small, cv2.INTER_LINEAR, borderValue=0)
+    if _row_sharpness(test) < DEWARP_GAIN * _row_sharpness(ink):
+        return gray, 0.0
+    field = cv2.resize(field_small, (w, h), interpolation=cv2.INTER_CUBIC) / scale
+    gx, gy = np.meshgrid(np.arange(w, dtype=np.float32), np.arange(h, dtype=np.float32))
+    out = cv2.remap(gray, gx, gy + field, cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+    return out, float(np.abs(field).max())
 
 
 def rotate(gray: np.ndarray, angle: float) -> np.ndarray:

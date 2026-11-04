@@ -61,6 +61,16 @@ def find_grids(gray: np.ndarray) -> list[Grid]:
         vs = cv2.dilate(vert[y : y + ch, x : x + cw], np.ones((1, 9), np.uint8))
         ys = _peaks(hs.sum(axis=1) / 255, cw * 0.8, 10)  # a real rule spans nearly the whole table
         xs = _peaks(vs.sum(axis=0) / 255, ch * 0.8, 10)
+        # An outer border can be lost (for example in the shadow near a book's
+        # spine) while the rules crossing it still show where the table ends.
+        if xs and xs[0] > 0.05 * cw:
+            xs.insert(0, 0)
+        if xs and xs[-1] < 0.95 * cw:
+            xs.append(cw - 1)
+        if ys and ys[0] > 0.05 * ch:
+            ys.insert(0, 0)
+        if ys and ys[-1] < 0.95 * ch:
+            ys.append(ch - 1)
         if len(ys) < 3 or len(xs) < 2:
             continue  # need at least two rows and one column of cells
         grids.append(Grid(x, y, x + cw, y + ch, [x + v for v in xs], [y + v for v in ys]))
@@ -122,3 +132,4 @@ def blank_out(gray: np.ndarray, grids: list[Grid]) -> np.ndarray:
     for g in grids:
         cv2.rectangle(out, (g.x0 - 6, g.y0 - 6), (g.x1 + 6, g.y1 + 6), 255, -1)
     return out
+

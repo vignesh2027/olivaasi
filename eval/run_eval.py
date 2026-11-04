@@ -34,6 +34,9 @@ sys.path.insert(0, str(ROOT / "src"))
 from olivaasi import config, ocr, pipeline, preprocess, structure, tts  # noqa: E402
 
 
+VARIANTS = (("scan", ".png"), ("photo", ".jpg"), ("hard", ".jpg"), ("camera", ".jpg"))
+
+
 def norm(text: str) -> str:
     text = unicodedata.normalize("NFC", text).replace("‌", "").replace("‍", "")
     return " ".join(text.split())
@@ -73,12 +76,17 @@ def truth_text(spec: dict) -> str:
             out += [" ".join(r) for r in b["rows"]]
         elif t == "ol":
             out += [f"{i}. {x}" for i, x in enumerate(b["items"], 1)]
+        elif t == "box":
+            out += [b["title"], b["text"]]
+        elif t == "pagenum":
+            out.append(b["text"])
     return "\n".join(out)
 
 
 def kinds_truth(spec: dict) -> list[str]:
-    m = {"h1": "h1", "h2": "h2", "p": "paragraph", "verse": "verse", "table": "table", "ol": "list"}
-    return [m[b["type"]] for b in spec["blocks"]]
+    m = {"h1": ["h1"], "h2": ["h2"], "p": ["paragraph"], "verse": ["verse"], "table": ["table"], "ol": ["list"],
+         "box": ["h2", "paragraph"], "pagenum": ["pagenum"]}
+    return [k for b in spec["blocks"] for k in m[b["type"]]]
 
 
 def kinds_doc(doc: structure.Document) -> list[str]:
@@ -87,6 +95,7 @@ def kinds_doc(doc: structure.Document) -> list[str]:
 
 def structure_scores(spec: dict, doc: structure.Document) -> dict:
     gt_heads = [(b["type"], b["text"]) for b in spec["blocks"] if b["type"] in ("h1", "h2")]
+    gt_heads += [("h2", b["title"]) for b in spec["blocks"] if b["type"] == "box"]
     got_heads = [(f"h{b.level}", " ".join(s.text for s in b.sentences)) for b in doc.blocks if b.kind == "heading"]
     heads_ok = sum(1 for lvl, txt in gt_heads if any(l2 == lvl and cer(txt, t2) < 0.15 for l2, t2 in got_heads))
 
@@ -152,7 +161,7 @@ def main() -> int:
     for spec_path in sorted((ROOT / "eval" / "pages").glob("*.json")):
         spec = json.loads(spec_path.read_text(encoding="utf-8"))
         truth = truth_text(spec)
-        for variant, ext in (("scan", ".png"), ("photo", ".jpg"), ("hard", ".jpg")):
+        for variant, ext in VARIANTS:
             img_path = ROOT / "eval" / "images" / f"{spec['id']}_{variant}{ext}"
             raw, raw_secs = raw_tesseract(img_path, args.langs)
             image = preprocess.load(img_path)
@@ -222,7 +231,7 @@ def to_markdown(r: dict) -> str:
     for x in r["rows"]:
         lines.append(f"| {x['page']} | {x['variant']} | {x['chars']} | {x['raw_cer']:.1%} | {x['olivaasi_cer']:.1%} | {x['raw_wer']:.1%} | {x['olivaasi_wer']:.1%} |")
     for lang, name in (("ta", "Tamil"), ("en", "English")):
-        for v in ("scan", "photo", "hard"):
+        for v, _ in VARIANTS:
             sel = [x for x in r["rows"] if x["lang"] == lang and x["variant"] == v]
             if sel:
                 tot = sum(x["chars"] for x in sel)

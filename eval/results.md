@@ -15,21 +15,31 @@ CER is character error rate (edits per ground-truth character, in Unicode code p
 | en_daffodils | scan | 677 | 0.6% | 0.3% | 2.4% | 1.6% |
 | en_daffodils | photo | 677 | 0.3% | 0.1% | 0.8% | 0.8% |
 | en_daffodils | hard | 677 | 10.5% | 1.0% | 18.6% | 4.0% |
+| en_daffodils | camera | 677 | 53.8% | 2.4% | 58.9% | 7.3% |
 | en_water | scan | 709 | 0.4% | 0.1% | 1.6% | 0.8% |
 | en_water | photo | 709 | 0.6% | 0.0% | 1.6% | 0.0% |
 | en_water | hard | 709 | 31.9% | 0.1% | 37.3% | 0.8% |
+| en_water | camera | 709 | 76.2% | 0.9% | 77.0% | 2.4% |
 | ta_kural | scan | 736 | 0.0% | 0.0% | 0.0% | 0.0% |
 | ta_kural | photo | 736 | 32.9% | 0.0% | 34.8% | 0.0% |
 | ta_kural | hard | 736 | 24.5% | 1.6% | 41.3% | 7.6% |
+| ta_kural | camera | 736 | 81.9% | 0.7% | 82.6% | 3.3% |
+| ta_plant | scan | 598 | 1.3% | 0.0% | 5.1% | 0.0% |
+| ta_plant | photo | 598 | 2.3% | 0.7% | 9.0% | 3.9% |
+| ta_plant | hard | 598 | 11.2% | 1.7% | 38.5% | 7.7% |
+| ta_plant | camera | 598 | 96.2% | 9.0% | 97.4% | 23.1% |
 | ta_water | scan | 725 | 0.3% | 0.0% | 1.1% | 0.0% |
 | ta_water | photo | 725 | 51.0% | 0.1% | 50.6% | 1.1% |
 | ta_water | hard | 725 | 10.1% | 1.8% | 31.5% | 10.1% |
-| **Tamil, all scans** | scan | 1461 | **0.1%** | **0.0%** | | |
-| **Tamil, all photos** | photo | 1461 | **41.9%** | **0.1%** | | |
-| **Tamil, all hards** | hard | 1461 | **17.3%** | **1.7%** | | |
+| ta_water | camera | 725 | 78.1% | 2.1% | 78.6% | 5.6% |
+| **Tamil, all scans** | scan | 2059 | **0.5%** | **0.0%** | | |
+| **Tamil, all photos** | photo | 2059 | **30.4%** | **0.2%** | | |
+| **Tamil, all hards** | hard | 2059 | **15.5%** | **1.7%** | | |
+| **Tamil, all cameras** | camera | 2059 | **84.7%** | **3.6%** | | |
 | **English, all scans** | scan | 1386 | **0.5%** | **0.2%** | | |
 | **English, all photos** | photo | 1386 | **0.4%** | **0.1%** | | |
 | **English, all hards** | hard | 1386 | **21.4%** | **0.6%** | | |
+| **English, all cameras** | camera | 1386 | **65.2%** | **1.6%** | | |
 
 ## Structure recovered
 
@@ -37,30 +47,46 @@ CER is character error rate (edits per ground-truth character, in Unicode code p
 |---|---|---|---|---|---|---:|
 | en_daffodils | scan | 3/3 | 4/4 | 7/8 | 6/6 | 100% |
 | en_daffodils | photo | 3/3 | 4/4 | 8/8 | 6/6 | 100% |
-| en_daffodils | hard | 2/3 | 4/4 | 7/8 | 6/6 | 86% |
+| en_daffodils | hard | 3/3 | 4/4 | 7/8 | 6/6 | 100% |
+| en_daffodils | camera | 2/3 | 2/4 | 6/8 | 6/6 | 100% |
 | en_water | scan | 3/3 | 4/4 | 7/8 | n/a | 100% |
 | en_water | photo | 3/3 | 4/4 | 8/8 | n/a | 100% |
 | en_water | hard | 1/3 | 4/4 | 7/8 | n/a | 71% |
+| en_water | camera | 3/3 | 2/4 | 6/8 | n/a | 100% |
 | ta_kural | scan | 4/4 | 5/5 | 8/8 | 6/6 | 100% |
 | ta_kural | photo | 4/4 | 5/5 | 8/8 | 6/6 | 100% |
-| ta_kural | hard | 2/4 | 3/5 | 7/8 | 2/6 | 60% |
+| ta_kural | hard | 4/4 | 3/5 | 7/8 | 6/6 | 100% |
+| ta_kural | camera | 4/4 | 5/5 | 7/8 | 3/6 | 70% |
+| ta_plant | scan | 4/4 | 3/3 | 8/8 | n/a | 100% |
+| ta_plant | photo | 2/4 | 3/3 | 7/8 | n/a | 67% |
+| ta_plant | hard | 1/4 | 3/3 | 6/8 | n/a | 44% |
+| ta_plant | camera | 0/4 | 1/3 | 8/8 | n/a | 33% |
 | ta_water | scan | 3/3 | 4/4 | 8/8 | n/a | 100% |
 | ta_water | photo | 3/3 | 4/4 | 7/8 | n/a | 100% |
-| ta_water | hard | 2/3 | 4/4 | 6/8 | n/a | 71% |
+| ta_water | hard | 3/3 | 4/4 | 6/8 | n/a | 100% |
+| ta_water | camera | 3/3 | 3/4 | 7/8 | n/a | 71% |
 
 ## Time per page
 
 | Page | Image | Clean-up | Tables | OCR | Structure | Recognition total | Speech (sentences, audio length) |
 |---|---|---:|---:|---:|---:|---:|---|
-| en_daffodils | scan | 0.06 s | 0.23 s | 0.76 s | 0.00 s | 1.1 s |  |
-| en_daffodils | photo | 0.07 s | 0.18 s | 0.76 s | 0.00 s | 1.0 s | 2.0 s (19 sentences, 58 s of audio) |
-| en_daffodils | hard | 0.05 s | 0.21 s | 0.84 s | 0.00 s | 1.1 s |  |
-| en_water | scan | 0.07 s | 0.30 s | 0.76 s | 0.00 s | 1.1 s |  |
-| en_water | photo | 0.07 s | 0.32 s | 0.79 s | 0.00 s | 1.2 s | 1.5 s (18 sentences, 63 s of audio) |
-| en_water | hard | 0.05 s | 0.28 s | 0.69 s | 0.00 s | 1.0 s |  |
-| ta_kural | scan | 0.07 s | 0.12 s | 0.54 s | 0.00 s | 0.7 s |  |
-| ta_kural | photo | 0.07 s | 0.13 s | 0.49 s | 0.00 s | 0.7 s | 1.6 s (22 sentences, 68 s of audio) |
-| ta_kural | hard | 0.05 s | 0.21 s | 1.50 s | 0.00 s | 1.8 s |  |
-| ta_water | scan | 0.06 s | 0.20 s | 0.98 s | 0.00 s | 1.2 s |  |
-| ta_water | photo | 0.08 s | 0.49 s | 0.81 s | 0.00 s | 1.4 s | 1.4 s (18 sentences, 63 s of audio) |
-| ta_water | hard | 0.05 s | 0.31 s | 1.22 s | 0.00 s | 1.6 s |  |
+| en_daffodils | scan | 0.06 s | 0.22 s | 0.75 s | 0.00 s | 1.0 s |  |
+| en_daffodils | photo | 0.07 s | 0.18 s | 0.75 s | 0.00 s | 1.0 s | 1.7 s (19 sentences, 58 s of audio) |
+| en_daffodils | hard | 0.05 s | 0.19 s | 0.81 s | 0.00 s | 2.1 s |  |
+| en_daffodils | camera | 0.24 s | 0.31 s | 1.35 s | 0.00 s | 3.7 s |  |
+| en_water | scan | 0.06 s | 0.29 s | 0.74 s | 0.00 s | 1.1 s |  |
+| en_water | photo | 0.07 s | 0.30 s | 0.77 s | 0.00 s | 1.1 s | 1.4 s (18 sentences, 63 s of audio) |
+| en_water | hard | 0.05 s | 0.26 s | 0.64 s | 0.00 s | 1.9 s |  |
+| en_water | camera | 0.23 s | 0.48 s | 1.36 s | 0.00 s | 3.9 s |  |
+| ta_kural | scan | 0.06 s | 0.12 s | 0.52 s | 0.00 s | 0.7 s |  |
+| ta_kural | photo | 0.07 s | 0.13 s | 0.49 s | 0.00 s | 0.7 s | 1.4 s (22 sentences, 68 s of audio) |
+| ta_kural | hard | 0.05 s | 0.21 s | 1.47 s | 0.00 s | 1.7 s |  |
+| ta_kural | camera | 0.22 s | 0.22 s | 1.86 s | 0.00 s | 4.4 s |  |
+| ta_plant | scan | 0.06 s | 0.19 s | 0.56 s | 0.00 s | 0.8 s |  |
+| ta_plant | photo | 0.07 s | 0.22 s | 0.62 s | 0.00 s | 0.9 s | 1.3 s (16 sentences, 52 s of audio) |
+| ta_plant | hard | 0.05 s | 0.23 s | 1.03 s | 0.00 s | 2.6 s |  |
+| ta_plant | camera | 0.24 s | 0.45 s | 3.05 s | 0.00 s | 7.1 s |  |
+| ta_water | scan | 0.06 s | 0.20 s | 0.97 s | 0.00 s | 1.2 s |  |
+| ta_water | photo | 0.07 s | 0.46 s | 0.78 s | 0.00 s | 1.3 s | 1.4 s (18 sentences, 63 s of audio) |
+| ta_water | hard | 0.05 s | 0.32 s | 1.18 s | 0.00 s | 3.0 s |  |
+| ta_water | camera | 0.23 s | 0.47 s | 1.96 s | 0.00 s | 5.1 s |  |

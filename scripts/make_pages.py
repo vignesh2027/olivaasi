@@ -30,6 +30,7 @@ CHROME = os.environ.get(
     "OLIVAASI_CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 )
 WIDTH, HEIGHT = 1240, 1754  # A4 at 150 dpi
+SEEDS = {"en_daffodils": 0, "en_water": 1, "ta_kural": 2, "ta_water": 3, "ta_plant": 4}
 
 CSS = """
 body { margin: 0; background: #fffdf7; color: #1a1a1a; }
@@ -43,6 +44,12 @@ td, th { border: 2px solid #333; padding: 8px 22px; text-align: left; }
 th { font-weight: bold; }
 ol { margin: 0; padding-left: 0; list-style: none; }
 li { margin: 0 0 10px; }
+.textbook { position: relative; min-height: 1600px; font-size: 23px; }
+.textbook h1, .textbook h2 { color: #1F4E8C; }
+.box { background: #E3F0FA; border-left: 8px solid #2E7BC0; border-radius: 8px; padding: 14px 22px; margin: 10px 0 26px; }
+.box .bt { font-weight: bold; color: #1F4E8C; margin: 0 0 6px; }
+.box p { margin: 0; }
+.pagenum { position: absolute; bottom: 0; left: 0; right: 0; text-align: center; font-size: 21px; }
 """
 
 
@@ -61,16 +68,20 @@ def page_html(spec: dict) -> str:
                 "<tr>" + "".join(f"<td>{html.escape(c)}</td>" for c in r) + "</tr>" for r in rows[1:]
             )
             out.append(f"<table><tr>{head}</tr>{body}</table>")
+        elif t == "box":
+            out.append(f'<div class="box"><p class="bt">{html.escape(b["title"])}</p><p>{html.escape(b["text"])}</p></div>')
+        elif t == "pagenum":
+            out.append(f'<div class="pagenum">{html.escape(b["text"])}</div>')
         elif t == "ol":
             out.append(
                 "<ol>" + "".join(f"<li>{i}. {html.escape(x)}</li>" for i, x in enumerate(b["items"], 1)) + "</ol>"
             )
     css = CSS % {"font": spec.get("font", "serif")}
     lang = spec.get("lang", "ta")
-    return f'<!doctype html><html lang="{lang}"><meta charset="utf-8"><style>{css}</style><div class="page">{"".join(out)}</div></html>'
+    return f'<!doctype html><html lang="{lang}"><meta charset="utf-8"><style>{css}</style><div class="page{' textbook' if spec.get('style') == 'textbook' else ''}">{"".join(out)}</div></html>'
 
 
-def render(spec: dict, png: Path, profile: Path) -> None:
+def render(spec: dict, png: Path, profile: Path, scale: int = 1) -> None:
     with tempfile.NamedTemporaryFile("w", suffix=".html", delete=False, encoding="utf-8") as f:
         f.write(page_html(spec))
         src = f.name
@@ -78,7 +89,7 @@ def render(spec: dict, png: Path, profile: Path) -> None:
         [
             CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--no-first-run",
             f"--user-data-dir={profile}", f"--window-size={WIDTH},{HEIGHT}",
-            "--force-device-scale-factor=1", f"--screenshot={png}", f"file://{src}",
+            f"--force-device-scale-factor={scale}", f"--screenshot={png}", f"file://{src}",
         ],
         check=True, capture_output=True,
     )
@@ -139,16 +150,68 @@ def hard_photo(scan: np.ndarray, seed: int) -> np.ndarray:
     return cv2.imdecode(buf, cv2.IMREAD_COLOR)
 
 
+def camera(printed: np.ndarray, seed: int) -> bytes:
+    """A harsh handheld capture of a 300 dpi print, as a phone would save it.
+
+    The page lies in an open book: the half near the spine bends away and is
+    shaded, light is warm and uneven, the phone is tilted and slightly moving,
+    focus is soft, the sensor is noisy, and the file is heavily compressed.
+    """
+    rng = np.random.default_rng(seed)
+    h, w = printed.shape[:2]
+    xs, ys = np.meshgrid(np.arange(w, dtype=np.float32), np.arange(h, dtype=np.float32))
+    # Bend near the spine (left edge): lines rise and squeeze as the paper curves away.
+    t = np.clip(1 - xs / (0.22 * w), 0, 1)
+    src_x = xs + 0.05 * w * t**2
+    src_y = ys - 0.018 * h * t**2 * np.sin(np.pi * ys / h)
+    bent = cv2.remap(printed, src_x, src_y, cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE).astype(np.float32)
+    gutter = 1 - 0.55 * t**1.5
+    light = 0.78 + 0.22 * np.exp(-(((xs - 0.7 * w) / (0.8 * w)) ** 2 + ((ys - 0.3 * h) / (0.9 * h)) ** 2))
+    bent *= (gutter * light)[..., None]
+    bent *= np.float32([0.84, 0.95, 1.04])  # warm indoor light (BGR)
+    # Onto a table, seen from an angle, inside a 3000 x 4000 frame.
+    cw, ch = 3000, 4000
+    desk = np.full((ch, cw, 3), (55, 75, 105), np.float32) + rng.normal(0, 10, (ch, cw, 3))
+    s = 0.92 * min(cw / w, ch / h)
+    pw, ph = w * s, h * s
+    ox, oy = (cw - pw) / 2, (ch - ph) / 2
+    j = lambda a: rng.uniform(-a, a) * pw
+    dst = np.float32([
+        [ox + 0.07 * pw + j(0.02), oy + 0.03 * ph + j(0.01)],
+        [ox + pw - 0.01 * pw + j(0.02), oy + 0.09 * ph + j(0.01)],
+        [ox + pw + 0.02 * pw + j(0.02), oy + ph - 0.02 * ph + j(0.01)],
+        [ox - 0.03 * pw + j(0.02), oy + ph - 0.05 * ph + j(0.01)],
+    ])
+    m = cv2.getPerspectiveTransform(np.float32([[0, 0], [w, 0], [w, h], [0, h]]), dst)
+    warped = cv2.warpPerspective(bent, m, (cw, ch), flags=cv2.INTER_AREA, borderValue=0)
+    mask = cv2.warpPerspective(np.ones((h, w), np.float32), m, (cw, ch))[..., None]
+    out = warped * mask + desk * (1 - mask)
+    # Hand shake (short diagonal smear) and soft focus.
+    k = np.zeros((9, 9), np.float32)
+    cv2.line(k, (1, 3), (7, 5), 1, 1)
+    out = cv2.filter2D(out, -1, k / k.sum())
+    out = cv2.GaussianBlur(out, (0, 0), 1.6)
+    out += rng.normal(0, 9, out.shape)
+    ok, buf = cv2.imencode(".jpg", out.clip(0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 50])
+    assert ok
+    return buf.tobytes()
+
+
 def main() -> int:
     IMAGES.mkdir(parents=True, exist_ok=True)
     profile = Path(tempfile.mkdtemp(prefix="olivaasi-chrome-"))
-    for i, path in enumerate(sorted(PAGES.glob("*.json"))):
+    for path in sorted(PAGES.glob("*.json")):
         spec = json.loads(path.read_text(encoding="utf-8"))
+        i = SEEDS[spec["id"]]  # fixed per page, so adding a page never changes the others
         scan_png = IMAGES / f"{spec['id']}_scan.png"
         render(spec, scan_png, profile)
         scan = cv2.imread(str(scan_png))
         cv2.imwrite(str(IMAGES / f"{spec['id']}_photo.jpg"), photo(scan, seed=100 + i), [cv2.IMWRITE_JPEG_QUALITY, 85])
         cv2.imwrite(str(IMAGES / f"{spec['id']}_hard.jpg"), hard_photo(scan, seed=200 + i), [cv2.IMWRITE_JPEG_QUALITY, 90])
+        with tempfile.TemporaryDirectory() as tmp:
+            printed_png = Path(tmp) / "print.png"
+            render(spec, printed_png, profile, scale=2)  # 300 dpi
+            (IMAGES / f"{spec['id']}_camera.jpg").write_bytes(camera(cv2.imread(str(printed_png)), seed=300 + i))
         print("made", spec["id"])
     return 0
 

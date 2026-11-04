@@ -109,3 +109,18 @@ def test_parse_tsv_skips_empty_words():
     )
     lines = parse_tsv(tsv)
     assert len(lines) == 1 and lines[0].text == "பாடம் 3"
+
+
+def test_misread_tamil_digit_labels_are_renumbered():
+    lines = [
+        line("1. What is evaporation?", 100, block=1, par=1),
+        line("௨. How are clouds formed?", 140, block=1, par=2),
+        line("3. Why save rainwater?", 180, block=1, par=3),
+    ]
+    doc = build(lines)
+    assert [i.label for i in doc.blocks[0].items] == ["1", "2", "3"]
+
+
+def test_real_tamil_numeral_lists_are_left_alone():
+    lines = [line("௧. ஒன்று", 100, block=1, par=1), line("௨. இரண்டு", 140, block=1, par=2)]
+    assert [i.label for i in build(lines).blocks[0].items] == ["௧", "௨"]

@@ -171,8 +171,11 @@ class _Page:
         t = ln.text
         if len(ln.words) > 10 or t.endswith((".", "?", ",", ";", ":")) or LABEL.match(t):
             return False
-        tall = ln.height >= 1.22 * self.body_h
-        bold = self.body_stroke > 0 and ln.stroke >= 1.25 * self.body_stroke
+        # Thresholds from measured lines on 20 images (eval/): on degraded photos
+        # bold headings are only 1.15 to 1.35 times the body stroke, while
+        # short body lines stay below 1.07.
+        tall = ln.height >= 1.2 * self.body_h
+        bold = self.body_stroke > 0 and ln.stroke >= 1.12 * self.body_stroke
         return tall or bold
 
 
@@ -347,6 +350,31 @@ def _merge_lists(blocks: list[Block]) -> None:
             del blocks[i + 1]
         else:
             i += 1
+    for b in blocks:
+        if b.kind == "list":
+            _renumber(b)
+
+
+TAMIL_DIGITS = set("\u0BE6\u0BE7\u0BE8\u0BE9\u0BEA\u0BEB\u0BEC\u0BED\u0BEE\u0BEF\u0BF0")
+
+
+def _renumber(b: Block) -> None:
+    """Fix question numbers misread as look-alike Tamil digits (a printed 2. read as ௨).
+
+    Only when the numbers that were read as ordinary digits all agree with a
+    simple 1, 2, 3 sequence; otherwise the labels are left exactly as read.
+    """
+    labels = [it.label for it in b.items]
+    arabic = [(k, int(x)) for k, x in enumerate(labels) if x.isascii() and x.isdigit()]
+    if not arabic or len(arabic) == len(labels):
+        return
+    start = arabic[0][1] - arabic[0][0]
+    if any(n != start + k for k, n in arabic):
+        return
+    if not all(x.isascii() and x.isdigit() or set(x) <= TAMIL_DIGITS for x in labels):
+        return
+    for k, it in enumerate(b.items):
+        it.label = str(start + k)
 
 
 def _assign_heading_levels(blocks: list[Block]) -> None:

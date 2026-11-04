@@ -32,27 +32,63 @@ class Result:
     confidence: float = 0.0
 
 
-def recognise(image, langs: str = "tam+eng") -> tuple[structure.Document, list[str], dict[str, float], float]:
-    """Image (BGR array) to Document. Returns the document, notes, stage timings and mean confidence."""
-    t0 = time.perf_counter()
-    prepared = preprocess.prepare(image)
-    gray = prepared.gray
-    t1 = time.perf_counter()
+@dataclass
+class _Reading:
+    gray: object
+    table_rows: list
+    lines: list
+    recovered: int
+    tables_s: float
+    ocr_s: float
+
+    @property
+    def score(self) -> float:
+        """Confidently read characters: favours the version that recovers more text, more surely."""
+        return sum(len(w.text) * max(w.conf, 0) / 100 for ln in self.lines for w in ln.words)
+
+
+def _read(gray, langs: str) -> _Reading:
+    t = time.perf_counter()
     grids = tables.find_grids(gray)
     table_rows = [(g.y0, tables.read_grid(gray, g, langs)) for g in grids]
     t2 = time.perf_counter()
     body = tables.blank_out(gray, grids)
     lines = ocr.run_tsv(body, langs=langs, psm=3)
     lines, recovered = ocr.recover_missed(body, lines, langs)
-    if recovered:
-        prepared.notes.append(f"Read {recovered} line(s) again that the first pass skipped.")
     ocr.add_strokes(gray, lines)
+    return _Reading(gray, table_rows, lines, recovered, t2 - t, time.perf_counter() - t2)
+
+
+def recognise(image, langs: str = "tam+eng") -> tuple[structure.Document, list[str], dict[str, float], float]:
+    """Image (BGR array) to Document. Returns the document, notes, stage timings and mean confidence.
+
+    If the text lines look curved, the page is read twice, as photographed and
+    with the lines straightened, and the reading with more confidently
+    recognised text is kept. Straightening helps a page bending into a book's
+    spine but can hurt a flat one, and OCR confidence tells them apart better
+    than any image measure we tried (see EVALUATION.md).
+    """
+    t0 = time.perf_counter()
+    prepared = preprocess.prepare(image)
+    t1 = time.perf_counter()
+    reading = _read(prepared.gray, langs)
+    straight, bend = preprocess.dewarp(prepared.gray)
+    t_dewarp = 0.0
+    if bend:
+        td = time.perf_counter()
+        other = _read(straight, langs)
+        t_dewarp = time.perf_counter() - td
+        if other.score > reading.score:
+            reading = other
+            prepared.notes.append(f"Straightened curved text lines (up to {bend:.0f} pixels).")
+    if reading.recovered:
+        prepared.notes.append(f"Read {reading.recovered} line(s) again that the first pass skipped.")
     t3 = time.perf_counter()
-    doc = structure.build(lines, table_rows, page_height=gray.shape[0])
+    doc = structure.build(reading.lines, reading.table_rows, page_height=reading.gray.shape[0])
     t4 = time.perf_counter()
-    words = [w for ln in lines for w in ln.words]
+    words = [w for ln in reading.lines for w in ln.words]
     conf = sum(w.conf for w in words) / len(words) if words else 0.0
-    timings = {"clean_up": t1 - t0, "tables": t2 - t1, "ocr": t3 - t2, "structure": t4 - t3}
+    timings = {"clean_up": t1 - t0, "tables": reading.tables_s, "ocr": reading.ocr_s, "second_reading": t_dewarp, "structure": t4 - t3}
     return doc, prepared.notes, timings, conf
 
 
