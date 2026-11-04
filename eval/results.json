@@ -12,17 +12,17 @@
    "chars": 677,
    "raw_cer": 0.0059,
    "raw_wer": 0.0242,
-   "padi_cer": 0.0,
-   "padi_wer": 0.0,
-   "confidence": 96.1,
-   "raw_seconds": 2.3,
+   "padi_cer": 0.003,
+   "padi_wer": 0.0161,
+   "confidence": 95.6,
+   "raw_seconds": 0.87,
    "seconds": {
     "clean_up": 0.06,
     "tables": 0.22,
-    "ocr": 0.86,
+    "ocr": 0.75,
     "structure": 0.0
    },
-   "recognise_seconds": 1.14,
+   "recognise_seconds": 1.04,
    "structure": {
     "headings": [
      3,
@@ -33,7 +33,7 @@
      4
     ],
     "table_cells": [
-     8,
+     7,
      8
     ],
     "verse_lines": [
@@ -69,17 +69,17 @@
    "chars": 677,
    "raw_cer": 0.003,
    "raw_wer": 0.0081,
-   "padi_cer": 0.0,
-   "padi_wer": 0.0,
-   "confidence": 96.2,
-   "raw_seconds": 1.13,
+   "padi_cer": 0.0015,
+   "padi_wer": 0.0081,
+   "confidence": 95.8,
+   "raw_seconds": 0.93,
    "seconds": {
     "clean_up": 0.07,
-    "tables": 0.29,
-    "ocr": 1.13,
+    "tables": 0.18,
+    "ocr": 0.83,
     "structure": 0.0
    },
-   "recognise_seconds": 1.49,
+   "recognise_seconds": 1.08,
    "structure": {
     "headings": [
      3,
@@ -118,9 +118,66 @@
     ]
    },
    "sentences": 19,
-   "audio_seconds": 1.72,
+   "audio_seconds": 4.15,
    "audio_length": 57.7,
    "voice": "macOS say"
+  },
+  {
+   "page": "en_daffodils",
+   "lang": "en",
+   "variant": "hard",
+   "chars": 677,
+   "raw_cer": 0.1049,
+   "raw_wer": 0.1855,
+   "padi_cer": 0.0103,
+   "padi_wer": 0.0403,
+   "confidence": 90.3,
+   "raw_seconds": 0.88,
+   "seconds": {
+    "clean_up": 0.05,
+    "tables": 0.2,
+    "ocr": 0.81,
+    "structure": 0.0
+   },
+   "recognise_seconds": 1.05,
+   "structure": {
+    "headings": [
+     2,
+     3
+    ],
+    "questions": [
+     4,
+     4
+    ],
+    "table_cells": [
+     7,
+     8
+    ],
+    "verse_lines": [
+     6,
+     6
+    ],
+    "block_sequence": 0.857,
+    "kinds_truth": [
+     "h1",
+     "paragraph",
+     "verse",
+     "h2",
+     "table",
+     "h2",
+     "list"
+    ],
+    "kinds_found": [
+     "h1",
+     "paragraph",
+     "verse",
+     "paragraph",
+     "table",
+     "h2",
+     "list"
+    ]
+   },
+   "sentences": 19
   },
   {
    "page": "en_water",
@@ -129,17 +186,17 @@
    "chars": 709,
    "raw_cer": 0.0042,
    "raw_wer": 0.0159,
-   "padi_cer": 0.0,
-   "padi_wer": 0.0,
-   "confidence": 96.4,
-   "raw_seconds": 0.99,
+   "padi_cer": 0.0014,
+   "padi_wer": 0.0079,
+   "confidence": 96.5,
+   "raw_seconds": 1.02,
    "seconds": {
-    "clean_up": 0.07,
-    "tables": 0.38,
-    "ocr": 0.99,
+    "clean_up": 0.06,
+    "tables": 0.31,
+    "ocr": 0.78,
     "structure": 0.0
    },
-   "recognise_seconds": 1.43,
+   "recognise_seconds": 1.15,
    "structure": {
     "headings": [
      3,
@@ -150,7 +207,7 @@
      4
     ],
     "table_cells": [
-     8,
+     7,
      8
     ],
     "verse_lines": [
@@ -188,15 +245,15 @@
    "raw_wer": 0.0159,
    "padi_cer": 0.0,
    "padi_wer": 0.0,
-   "confidence": 96.5,
-   "raw_seconds": 1.01,
+   "confidence": 96.4,
+   "raw_seconds": 1.03,
    "seconds": {
     "clean_up": 0.07,
-    "tables": 0.35,
-    "ocr": 1.01,
+    "tables": 0.31,
+    "ocr": 0.82,
     "structure": 0.0
    },
-   "recognise_seconds": 1.44,
+   "recognise_seconds": 1.2,
    "structure": {
     "headings": [
      3,
@@ -235,9 +292,65 @@
     ]
    },
    "sentences": 18,
-   "audio_seconds": 3.39,
+   "audio_seconds": 1.42,
    "audio_length": 63.1,
    "voice": "macOS say"
+  },
+  {
+   "page": "en_water",
+   "lang": "en",
+   "variant": "hard",
+   "chars": 709,
+   "raw_cer": 0.3188,
+   "raw_wer": 0.373,
+   "padi_cer": 0.0014,
+   "padi_wer": 0.0079,
+   "confidence": 95.9,
+   "raw_seconds": 1.12,
+   "seconds": {
+    "clean_up": 0.06,
+    "tables": 0.35,
+    "ocr": 0.94,
+    "structure": 0.0
+   },
+   "recognise_seconds": 1.35,
+   "structure": {
+    "headings": [
+     1,
+     3
+    ],
+    "questions": [
+     4,
+     4
+    ],
+    "table_cells": [
+     7,
+     8
+    ],
+    "verse_lines": [
+     0,
+     0
+    ],
+    "block_sequence": 0.714,
+    "kinds_truth": [
+     "h1",
+     "paragraph",
+     "h2",
+     "paragraph",
+     "table",
+     "h2",
+     "list"
+    ],
+    "kinds_found": [
+     "h1",
+     "paragraph",
+     "paragraph",
+     "table",
+     "paragraph",
+     "list"
+    ]
+   },
+   "sentences": 17
   },
   {
    "page": "ta_kural",
@@ -248,15 +361,15 @@
    "raw_wer": 0.0,
    "padi_cer": 0.0,
    "padi_wer": 0.0,
-   "confidence": 95.7,
-   "raw_seconds": 0.77,
+   "confidence": 95.9,
+   "raw_seconds": 0.64,
    "seconds": {
     "clean_up": 0.06,
-    "tables": 0.15,
-    "ocr": 0.63,
+    "tables": 0.16,
+    "ocr": 0.58,
     "structure": 0.0
    },
-   "recognise_seconds": 0.84,
+   "recognise_seconds": 0.8,
    "structure": {
     "headings": [
      4,
@@ -312,14 +425,14 @@
    "padi_cer": 0.0,
    "padi_wer": 0.0,
    "confidence": 95.8,
-   "raw_seconds": 0.58,
+   "raw_seconds": 0.61,
    "seconds": {
-    "clean_up": 0.06,
-    "tables": 0.15,
-    "ocr": 0.69,
+    "clean_up": 0.07,
+    "tables": 0.14,
+    "ocr": 0.53,
     "structure": 0.0
    },
-   "recognise_seconds": 0.91,
+   "recognise_seconds": 0.75,
    "structure": {
     "headings": [
      4,
@@ -364,9 +477,69 @@
     ]
    },
    "sentences": 22,
-   "audio_seconds": 1.95,
+   "audio_seconds": 2.23,
    "audio_length": 67.8,
    "voice": "macOS say"
+  },
+  {
+   "page": "ta_kural",
+   "lang": "ta",
+   "variant": "hard",
+   "chars": 736,
+   "raw_cer": 0.2446,
+   "raw_wer": 0.413,
+   "padi_cer": 0.0163,
+   "padi_wer": 0.0761,
+   "confidence": 86.3,
+   "raw_seconds": 1.15,
+   "seconds": {
+    "clean_up": 0.05,
+    "tables": 0.23,
+    "ocr": 1.69,
+    "structure": 0.0
+   },
+   "recognise_seconds": 1.97,
+   "structure": {
+    "headings": [
+     2,
+     4
+    ],
+    "questions": [
+     3,
+     5
+    ],
+    "table_cells": [
+     7,
+     8
+    ],
+    "verse_lines": [
+     2,
+     6
+    ],
+    "block_sequence": 0.6,
+    "kinds_truth": [
+     "h1",
+     "h2",
+     "paragraph",
+     "h2",
+     "verse",
+     "verse",
+     "verse",
+     "table",
+     "h2",
+     "list"
+    ],
+    "kinds_found": [
+     "h1",
+     "h2",
+     "paragraph",
+     "verse",
+     "table",
+     "paragraph",
+     "list"
+    ]
+   },
+   "sentences": 21
   },
   {
    "page": "ta_water",
@@ -377,15 +550,15 @@
    "raw_wer": 0.0112,
    "padi_cer": 0.0,
    "padi_wer": 0.0,
-   "confidence": 95.4,
-   "raw_seconds": 1.18,
+   "confidence": 95.0,
+   "raw_seconds": 1.4,
    "seconds": {
-    "clean_up": 0.05,
-    "tables": 0.18,
-    "ocr": 0.82,
+    "clean_up": 0.07,
+    "tables": 0.25,
+    "ocr": 1.03,
     "structure": 0.0
    },
-   "recognise_seconds": 1.05,
+   "recognise_seconds": 1.35,
    "structure": {
     "headings": [
      3,
@@ -434,15 +607,15 @@
    "raw_wer": 0.5056,
    "padi_cer": 0.0014,
    "padi_wer": 0.0112,
-   "confidence": 95.7,
-   "raw_seconds": 0.45,
+   "confidence": 94.5,
+   "raw_seconds": 0.51,
    "seconds": {
-    "clean_up": 0.06,
-    "tables": 0.18,
-    "ocr": 0.83,
+    "clean_up": 0.09,
+    "tables": 0.55,
+    "ocr": 1.08,
     "structure": 0.0
    },
-   "recognise_seconds": 1.06,
+   "recognise_seconds": 1.71,
    "structure": {
     "headings": [
      3,
@@ -481,9 +654,64 @@
     ]
    },
    "sentences": 18,
-   "audio_seconds": 1.68,
+   "audio_seconds": 2.11,
    "audio_length": 63.4,
    "voice": "macOS say"
+  },
+  {
+   "page": "ta_water",
+   "lang": "ta",
+   "variant": "hard",
+   "chars": 725,
+   "raw_cer": 0.1007,
+   "raw_wer": 0.3146,
+   "padi_cer": 0.0179,
+   "padi_wer": 0.1011,
+   "confidence": 86.0,
+   "raw_seconds": 1.66,
+   "seconds": {
+    "clean_up": 0.08,
+    "tables": 0.4,
+    "ocr": 1.61,
+    "structure": 0.0
+   },
+   "recognise_seconds": 2.1,
+   "structure": {
+    "headings": [
+     2,
+     3
+    ],
+    "questions": [
+     4,
+     4
+    ],
+    "table_cells": [
+     6,
+     8
+    ],
+    "verse_lines": [
+     0,
+     0
+    ],
+    "block_sequence": 0.714,
+    "kinds_truth": [
+     "h1",
+     "paragraph",
+     "h2",
+     "paragraph",
+     "table",
+     "h2",
+     "list"
+    ],
+    "kinds_found": [
+     "h1",
+     "paragraph",
+     "table",
+     "h2",
+     "list"
+    ]
+   },
+   "sentences": 17
   }
  ]
 }

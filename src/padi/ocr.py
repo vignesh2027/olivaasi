@@ -14,6 +14,7 @@ import cv2
 import numpy as np
 
 from . import config
+from .preprocess import letter_mask
 
 LANG_CHOICES = {
     "tam+eng": "Tamil and English",
@@ -113,6 +114,91 @@ def run_tsv(img: np.ndarray, langs: str = "tam+eng", psm: int = 3) -> list[Line]
     finally:
         os.unlink(path)
     return parse_tsv(proc.stdout)
+
+
+def ink_rows(gray: np.ndarray) -> list[tuple[int, int, int, int]]:
+    """Horizontal bands that contain printed text: (top, bottom, left, right)."""
+    ink = letter_mask(gray)
+    h, w = ink.shape
+    on = (ink > 0).sum(axis=1) > max(3, int(0.004 * w))
+    runs: list[list[int]] = []
+    for y in np.nonzero(on)[0]:
+        if runs and y - runs[-1][1] <= 4:  # Tamil vowel signs sit just above or below the line
+            runs[-1][1] = int(y)
+        else:
+            runs.append([int(y), int(y)])
+    out = []
+    for y0, y1 in runs:
+        if y1 - y0 < 8:
+            continue
+        cols = np.nonzero((ink[y0 : y1 + 1] > 0).any(axis=0))[0]
+        x0, x1 = int(cols[0]), int(cols[-1])
+        density = (ink[y0 : y1 + 1, x0 : x1 + 1] > 0).mean()
+        if density > 0.5:
+            continue  # a dark edge or shadow, not text
+        out.append((y0, y1 + 1, x0, x1 + 1))
+    return out
+
+
+def recover_missed(gray: np.ndarray, lines: list[Line], langs: str) -> tuple[list[Line], int]:
+    """Read text rows that Tesseract's page layout step skipped.
+
+    On blurred or low-resolution photos Tesseract sometimes drops a whole
+    paragraph without any warning, and a blind reader cannot notice that.
+    Every band of ink that no recognised line overlaps is read again on its
+    own and put back in reading order. Returns the merged lines and how many
+    lines were recovered.
+    """
+    def covered(y0: int, y1: int) -> bool:
+        for ln in lines:
+            overlap = min(y1, ln.bottom) - max(y0, ln.top)
+            if overlap > 0.4 * (y1 - y0):
+                return True
+        return False
+
+    missed = [r for r in ink_rows(gray) if not covered(r[0], r[1])][:MAX_RECOVER]
+    h, w = gray.shape
+    added: list[Line] = []
+    for k, (y0, y1, x0, x1) in enumerate(missed):
+        line = _read_row(gray, max(0, y0 - 3), min(h, y1 + 3), max(0, x0 - 12), min(w, x1 + 12), langs)
+        if line is not None:
+            line.block, line.par = 10_000 + k, 1
+            added.append(line)
+    if not added:
+        return lines, 0
+    merged = list(lines)
+    for ln in added:
+        pos = next((i for i, other in enumerate(merged) if other.top > ln.top), len(merged))
+        before = merged[pos - 1] if pos > 0 else None
+        after = merged[pos] if pos < len(merged) else None
+        if before and after and (before.block, before.par) == (after.block, after.par):
+            ln.block, ln.par = before.block, before.par  # it was a line inside that paragraph
+        merged.insert(pos, ln)
+    return merged, len(added)
+
+
+MAX_RECOVER = 40
+
+
+def _read_row(gray: np.ndarray, y0: int, y1: int, x0: int, x1: int, langs: str) -> Line | None:
+    """Read one row of text as a single line, enlarged, skipping layout analysis."""
+    crop = cv2.resize(gray[y0:y1, x0:x1], None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+    crop = cv2.copyMakeBorder(crop, 20, 20, 20, 20, cv2.BORDER_CONSTANT, value=255)
+    for psm in (13, 7):
+        found = [ln for ln in run_tsv(crop, langs=langs, psm=psm) if ln.words]
+        words = [wd for ln in found for wd in ln.words]
+        if not words:
+            continue
+        line = Line(block=0, par=0, words=words)
+        if line.conf < 50 or not any(len(wd.text) >= 2 for wd in words):
+            continue
+        for wd in words:  # back to page coordinates
+            wd.left = x0 + (wd.left - 20) // 2
+            wd.top = y0 + (wd.top - 20) // 2
+            wd.width //= 2
+            wd.height //= 2
+        return line
+    return None
 
 
 def add_strokes(gray: np.ndarray, lines: list[Line]) -> None:

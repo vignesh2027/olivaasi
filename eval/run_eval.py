@@ -152,7 +152,7 @@ def main() -> int:
     for spec_path in sorted((ROOT / "eval" / "pages").glob("*.json")):
         spec = json.loads(spec_path.read_text(encoding="utf-8"))
         truth = truth_text(spec)
-        for variant, ext in (("scan", ".png"), ("photo", ".jpg")):
+        for variant, ext in (("scan", ".png"), ("photo", ".jpg"), ("hard", ".jpg")):
             img_path = ROOT / "eval" / "images" / f"{spec['id']}_{variant}{ext}"
             raw, raw_secs = raw_tesseract(img_path, args.langs)
             image = preprocess.load(img_path)
@@ -222,7 +222,7 @@ def to_markdown(r: dict) -> str:
     for x in r["rows"]:
         lines.append(f"| {x['page']} | {x['variant']} | {x['chars']} | {x['raw_cer']:.1%} | {x['padi_cer']:.1%} | {x['raw_wer']:.1%} | {x['padi_wer']:.1%} |")
     for lang, name in (("ta", "Tamil"), ("en", "English")):
-        for v in ("scan", "photo"):
+        for v in ("scan", "photo", "hard"):
             sel = [x for x in r["rows"] if x["lang"] == lang and x["variant"] == v]
             if sel:
                 tot = sum(x["chars"] for x in sel)

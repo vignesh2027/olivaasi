@@ -12,41 +12,55 @@ CER is character error rate (edits per ground-truth character, in Unicode code p
 
 | Page | Image | Characters | Plain Tesseract CER | Padi CER | Plain Tesseract WER | Padi WER |
 |---|---|---:|---:|---:|---:|---:|
-| en_daffodils | scan | 677 | 0.6% | 0.0% | 2.4% | 0.0% |
-| en_daffodils | photo | 677 | 0.3% | 0.0% | 0.8% | 0.0% |
-| en_water | scan | 709 | 0.4% | 0.0% | 1.6% | 0.0% |
+| en_daffodils | scan | 677 | 0.6% | 0.3% | 2.4% | 1.6% |
+| en_daffodils | photo | 677 | 0.3% | 0.1% | 0.8% | 0.8% |
+| en_daffodils | hard | 677 | 10.5% | 1.0% | 18.6% | 4.0% |
+| en_water | scan | 709 | 0.4% | 0.1% | 1.6% | 0.8% |
 | en_water | photo | 709 | 0.6% | 0.0% | 1.6% | 0.0% |
+| en_water | hard | 709 | 31.9% | 0.1% | 37.3% | 0.8% |
 | ta_kural | scan | 736 | 0.0% | 0.0% | 0.0% | 0.0% |
 | ta_kural | photo | 736 | 32.9% | 0.0% | 34.8% | 0.0% |
+| ta_kural | hard | 736 | 24.5% | 1.6% | 41.3% | 7.6% |
 | ta_water | scan | 725 | 0.3% | 0.0% | 1.1% | 0.0% |
 | ta_water | photo | 725 | 51.0% | 0.1% | 50.6% | 1.1% |
+| ta_water | hard | 725 | 10.1% | 1.8% | 31.5% | 10.1% |
 | **Tamil, all scans** | scan | 1461 | **0.1%** | **0.0%** | | |
 | **Tamil, all photos** | photo | 1461 | **41.9%** | **0.1%** | | |
-| **English, all scans** | scan | 1386 | **0.5%** | **0.0%** | | |
-| **English, all photos** | photo | 1386 | **0.4%** | **0.0%** | | |
+| **Tamil, all hards** | hard | 1461 | **17.3%** | **1.7%** | | |
+| **English, all scans** | scan | 1386 | **0.5%** | **0.2%** | | |
+| **English, all photos** | photo | 1386 | **0.4%** | **0.1%** | | |
+| **English, all hards** | hard | 1386 | **21.4%** | **0.6%** | | |
 
 ## Structure recovered
 
 | Page | Image | Headings (text and level) | Questions | Table cells exact | Verse lines | Block sequence |
 |---|---|---|---|---|---|---:|
-| en_daffodils | scan | 3/3 | 4/4 | 8/8 | 6/6 | 100% |
+| en_daffodils | scan | 3/3 | 4/4 | 7/8 | 6/6 | 100% |
 | en_daffodils | photo | 3/3 | 4/4 | 8/8 | 6/6 | 100% |
-| en_water | scan | 3/3 | 4/4 | 8/8 | n/a | 100% |
+| en_daffodils | hard | 2/3 | 4/4 | 7/8 | 6/6 | 86% |
+| en_water | scan | 3/3 | 4/4 | 7/8 | n/a | 100% |
 | en_water | photo | 3/3 | 4/4 | 8/8 | n/a | 100% |
+| en_water | hard | 1/3 | 4/4 | 7/8 | n/a | 71% |
 | ta_kural | scan | 4/4 | 5/5 | 8/8 | 6/6 | 100% |
 | ta_kural | photo | 4/4 | 5/5 | 8/8 | 6/6 | 100% |
+| ta_kural | hard | 2/4 | 3/5 | 7/8 | 2/6 | 60% |
 | ta_water | scan | 3/3 | 4/4 | 8/8 | n/a | 100% |
 | ta_water | photo | 3/3 | 4/4 | 7/8 | n/a | 100% |
+| ta_water | hard | 2/3 | 4/4 | 6/8 | n/a | 71% |
 
 ## Time per page
 
 | Page | Image | Clean-up | Tables | OCR | Structure | Recognition total | Speech (sentences, audio length) |
 |---|---|---:|---:|---:|---:|---:|---|
-| en_daffodils | scan | 0.06 s | 0.22 s | 0.86 s | 0.00 s | 1.1 s |  |
-| en_daffodils | photo | 0.07 s | 0.29 s | 1.13 s | 0.00 s | 1.5 s | 1.7 s (19 sentences, 58 s of audio) |
-| en_water | scan | 0.07 s | 0.38 s | 0.99 s | 0.00 s | 1.4 s |  |
-| en_water | photo | 0.07 s | 0.35 s | 1.01 s | 0.00 s | 1.4 s | 3.4 s (18 sentences, 63 s of audio) |
-| ta_kural | scan | 0.06 s | 0.15 s | 0.63 s | 0.00 s | 0.8 s |  |
-| ta_kural | photo | 0.06 s | 0.15 s | 0.69 s | 0.00 s | 0.9 s | 1.9 s (22 sentences, 68 s of audio) |
-| ta_water | scan | 0.05 s | 0.18 s | 0.82 s | 0.00 s | 1.1 s |  |
-| ta_water | photo | 0.06 s | 0.18 s | 0.83 s | 0.00 s | 1.1 s | 1.7 s (18 sentences, 63 s of audio) |
+| en_daffodils | scan | 0.06 s | 0.22 s | 0.75 s | 0.00 s | 1.0 s |  |
+| en_daffodils | photo | 0.07 s | 0.18 s | 0.83 s | 0.00 s | 1.1 s | 4.2 s (19 sentences, 58 s of audio) |
+| en_daffodils | hard | 0.05 s | 0.20 s | 0.81 s | 0.00 s | 1.1 s |  |
+| en_water | scan | 0.06 s | 0.31 s | 0.78 s | 0.00 s | 1.1 s |  |
+| en_water | photo | 0.07 s | 0.31 s | 0.82 s | 0.00 s | 1.2 s | 1.4 s (18 sentences, 63 s of audio) |
+| en_water | hard | 0.06 s | 0.35 s | 0.94 s | 0.00 s | 1.4 s |  |
+| ta_kural | scan | 0.06 s | 0.16 s | 0.58 s | 0.00 s | 0.8 s |  |
+| ta_kural | photo | 0.07 s | 0.14 s | 0.53 s | 0.00 s | 0.8 s | 2.2 s (22 sentences, 68 s of audio) |
+| ta_kural | hard | 0.05 s | 0.23 s | 1.69 s | 0.00 s | 2.0 s |  |
+| ta_water | scan | 0.07 s | 0.25 s | 1.03 s | 0.00 s | 1.4 s |  |
+| ta_water | photo | 0.09 s | 0.55 s | 1.08 s | 0.00 s | 1.7 s | 2.1 s (18 sentences, 63 s of audio) |
+| ta_water | hard | 0.08 s | 0.40 s | 1.61 s | 0.00 s | 2.1 s |  |

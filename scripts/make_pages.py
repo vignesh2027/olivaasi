@@ -118,6 +118,27 @@ def photo(scan: np.ndarray, seed: int) -> np.ndarray:
     return cv2.imdecode(buf, cv2.IMREAD_COLOR)
 
 
+def hard_photo(scan: np.ndarray, seed: int) -> np.ndarray:
+    """A worse photo: page curl, a strong shadow, taken from further away, more blur and compression."""
+    rng = np.random.default_rng(seed)
+    h, w = scan.shape[:2]
+    # Curl: the page bows, so straight text lines become arcs.
+    xs, ys = np.meshgrid(np.arange(w, dtype=np.float32), np.arange(h, dtype=np.float32))
+    bow = 14 * np.sin(np.pi * xs / w) * (0.4 + 0.6 * ys / h)
+    curled = cv2.remap(scan, xs, ys - bow, cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+    # A shadow from a hand or phone across one corner.
+    shadow = 1 - 0.45 * np.clip(1 - np.hypot(xs - w, ys - h) / (0.9 * w), 0, 1)
+    shaded = curled.astype(np.float32) * shadow[..., None] * np.linspace(1.0, 0.85, h)[:, None, None]
+    out = photo(shaded.clip(0, 255).astype(np.uint8), seed)
+    # Further away: the page is about 1100 px wide in the final image.
+    f = 0.62
+    out = cv2.resize(out, None, fx=f, fy=f, interpolation=cv2.INTER_AREA)
+    out = cv2.GaussianBlur(out.astype(np.float32), (0, 0), 0.9) + rng.normal(0, 7, out.shape)
+    ok, buf = cv2.imencode(".jpg", out.clip(0, 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 55])
+    assert ok
+    return cv2.imdecode(buf, cv2.IMREAD_COLOR)
+
+
 def main() -> int:
     IMAGES.mkdir(parents=True, exist_ok=True)
     profile = Path(tempfile.mkdtemp(prefix="padi-chrome-"))
@@ -127,6 +148,7 @@ def main() -> int:
         render(spec, scan_png, profile)
         scan = cv2.imread(str(scan_png))
         cv2.imwrite(str(IMAGES / f"{spec['id']}_photo.jpg"), photo(scan, seed=100 + i), [cv2.IMWRITE_JPEG_QUALITY, 85])
+        cv2.imwrite(str(IMAGES / f"{spec['id']}_hard.jpg"), hard_photo(scan, seed=200 + i), [cv2.IMWRITE_JPEG_QUALITY, 90])
         print("made", spec["id"])
     return 0
 

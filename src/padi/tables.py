@@ -54,10 +54,13 @@ def find_grids(gray: np.ndarray) -> list[Grid]:
         x, y, cw, ch = cv2.boundingRect(c)
         if cw < w * 0.15 or ch < h * 0.03:
             continue
-        hs = horiz[y : y + ch, x : x + cw]
-        vs = vert[y : y + ch, x : x + cw]
-        ys = _peaks(hs.sum(axis=1) / 255, cw * 0.5, 6)
-        xs = _peaks(vs.sum(axis=0) / 255, ch * 0.5, 6)
+        if x <= 2 or y <= 2 or x + cw >= w - 2 or y + ch >= h - 2:
+            continue  # touches the image edge: a page border or shadow, not a printed table
+        # Thicken the rules first so a slightly tilted line still fills one row or column.
+        hs = cv2.dilate(horiz[y : y + ch, x : x + cw], np.ones((9, 1), np.uint8))
+        vs = cv2.dilate(vert[y : y + ch, x : x + cw], np.ones((1, 9), np.uint8))
+        ys = _peaks(hs.sum(axis=1) / 255, cw * 0.8, 10)  # a real rule spans nearly the whole table
+        xs = _peaks(vs.sum(axis=0) / 255, ch * 0.8, 10)
         if len(ys) < 3 or len(xs) < 2:
             continue  # need at least two rows and one column of cells
         grids.append(Grid(x, y, x + cw, y + ch, [x + v for v in xs], [y + v for v in ys]))
@@ -88,13 +91,30 @@ def read_grid(gray: np.ndarray, grid: Grid, langs: str, psm: int = 6) -> list[li
                 continue  # leftover bits of a ruled line read as ~ or |
             cells[r][c].append(wd)
     rows = []
-    for r in cells:
+    for i, r in enumerate(cells):
         row = []
-        for words in r:
+        for j, words in enumerate(r):
             ordered = [w.text for ln in ocr.group_words_into_lines(words) for w in ln]
-            row.append(ocr.clean_text(" ".join(ordered)))
+            text = ocr.clean_text(" ".join(ordered))
+            if not text:
+                text = _read_cell(gray, grid, i, j, langs)
+            row.append(text)
         rows.append(row)
     return rows
+
+
+def _read_cell(gray: np.ndarray, grid: Grid, r: int, c: int, langs: str) -> str:
+    """Second try for a cell the whole-table pass left empty, if it has ink in it."""
+    inset = 8
+    cell = gray[grid.ys[r] + inset : grid.ys[r + 1] - inset, grid.xs[c] + inset : grid.xs[c + 1] - inset]
+    if cell.size == 0:
+        return ""
+    _, ink = cv2.threshold(cell, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+    if (ink > 0).mean() < 0.01 or cell.std() < 12:
+        return ""  # genuinely empty
+    lines = ocr.run_tsv(cv2.copyMakeBorder(cell, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=255), langs=langs, psm=7)
+    words = [w for ln in lines for w in ln.words if re.search(r"[\w஀-௿]", w.text)]
+    return ocr.clean_text(" ".join(w.text for w in words))
 
 
 def blank_out(gray: np.ndarray, grids: list[Grid]) -> np.ndarray:

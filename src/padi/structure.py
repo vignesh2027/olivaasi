@@ -210,6 +210,7 @@ def build(lines: list[Line], tables: list[tuple[int, list[list[str]]]] | None = 
                 blocks.extend(_body_blocks(run, page))
         _merge_verse(blocks, page)
         _merge_paragraphs(blocks, page)
+        _absorb_bare_numbers(blocks)
         _merge_lists(blocks)
         _page_number(blocks, page_height)
     for top, rows in tables or []:
@@ -312,6 +313,28 @@ def _merge_paragraphs(blocks: list[Block], page: _Page) -> None:
             del blocks[i + 1]
         else:
             i += 1
+
+
+BARE_NUMBER = re.compile(r"^(\d{1,2})\s+(\S.*)$")
+
+
+def _absorb_bare_numbers(blocks: list[Block]) -> None:
+    """A question whose full stop was lost ("2 What ...") joins the list it continues."""
+    for i, b in enumerate(blocks):
+        if b.kind != "paragraph":
+            continue
+        m = BARE_NUMBER.match(" ".join(s.text for s in b.sentences))
+        if not m:
+            continue
+        n = int(m.group(1))
+        prev = blocks[i - 1] if i > 0 else None
+        nxt = blocks[i + 1] if i + 1 < len(blocks) else None
+        fits_prev = prev is not None and prev.kind == "list" and prev.items[-1].label == str(n - 1)
+        fits_next = nxt is not None and nxt.kind == "list" and nxt.items[0].label == str(n + 1)
+        if fits_prev or fits_next:
+            b.kind = "list"
+            b.items = [ListItem(label=str(n), sentences=make_sentences(m.group(2)))]
+            b.sentences = []
 
 
 def _merge_lists(blocks: list[Block]) -> None:

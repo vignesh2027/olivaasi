@@ -40,7 +40,11 @@ def recognise(image, langs: str = "tam+eng") -> tuple[structure.Document, list[s
     grids = tables.find_grids(gray)
     table_rows = [(g.y0, tables.read_grid(gray, g, langs)) for g in grids]
     t2 = time.perf_counter()
-    lines = ocr.run_tsv(tables.blank_out(gray, grids), langs=langs, psm=3)
+    body = tables.blank_out(gray, grids)
+    lines = ocr.run_tsv(body, langs=langs, psm=3)
+    lines, recovered = ocr.recover_missed(body, lines, langs)
+    if recovered:
+        prepared.notes.append(f"Read {recovered} line(s) again that the first pass skipped.")
     ocr.add_strokes(gray, lines)
     t3 = time.perf_counter()
     doc = structure.build(lines, table_rows, page_height=gray.shape[0])
