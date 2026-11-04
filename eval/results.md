@@ -68,25 +68,25 @@ CER is character error rate (edits per ground-truth character, in Unicode code p
 
 ## Time per page
 
-| Page | Image | Clean-up | Tables | OCR | Structure | Recognition total | Speech (sentences, audio length) |
-|---|---|---:|---:|---:|---:|---:|---|
-| en_daffodils | scan | 0.06 s | 0.22 s | 0.75 s | 0.00 s | 1.0 s |  |
-| en_daffodils | photo | 0.07 s | 0.18 s | 0.75 s | 0.00 s | 1.0 s | 1.7 s (19 sentences, 58 s of audio) |
-| en_daffodils | hard | 0.05 s | 0.19 s | 0.81 s | 0.00 s | 2.1 s |  |
-| en_daffodils | camera | 0.24 s | 0.31 s | 1.35 s | 0.00 s | 3.7 s |  |
-| en_water | scan | 0.06 s | 0.29 s | 0.74 s | 0.00 s | 1.1 s |  |
-| en_water | photo | 0.07 s | 0.30 s | 0.77 s | 0.00 s | 1.1 s | 1.4 s (18 sentences, 63 s of audio) |
-| en_water | hard | 0.05 s | 0.26 s | 0.64 s | 0.00 s | 1.9 s |  |
-| en_water | camera | 0.23 s | 0.48 s | 1.36 s | 0.00 s | 3.9 s |  |
-| ta_kural | scan | 0.06 s | 0.12 s | 0.52 s | 0.00 s | 0.7 s |  |
-| ta_kural | photo | 0.07 s | 0.13 s | 0.49 s | 0.00 s | 0.7 s | 1.4 s (22 sentences, 68 s of audio) |
-| ta_kural | hard | 0.05 s | 0.21 s | 1.47 s | 0.00 s | 1.7 s |  |
-| ta_kural | camera | 0.22 s | 0.22 s | 1.86 s | 0.00 s | 4.4 s |  |
-| ta_plant | scan | 0.06 s | 0.19 s | 0.56 s | 0.00 s | 0.8 s |  |
-| ta_plant | photo | 0.07 s | 0.22 s | 0.62 s | 0.00 s | 0.9 s | 1.3 s (16 sentences, 52 s of audio) |
-| ta_plant | hard | 0.05 s | 0.23 s | 1.03 s | 0.00 s | 2.6 s |  |
-| ta_plant | camera | 0.24 s | 0.45 s | 3.05 s | 0.00 s | 7.1 s |  |
-| ta_water | scan | 0.06 s | 0.20 s | 0.97 s | 0.00 s | 1.2 s |  |
-| ta_water | photo | 0.07 s | 0.46 s | 0.78 s | 0.00 s | 1.3 s | 1.4 s (18 sentences, 63 s of audio) |
-| ta_water | hard | 0.05 s | 0.32 s | 1.18 s | 0.00 s | 3.0 s |  |
-| ta_water | camera | 0.23 s | 0.47 s | 1.96 s | 0.00 s | 5.1 s |  |
+| Page | Image | Clean-up | Tables | OCR | Second reading (curved lines) | Structure | Recognition total | Speech (sentences, audio length) |
+|---|---|---:|---:|---:|---:|---:|---:|---|
+| en_daffodils | scan | 0.06 s | 0.24 s | 0.79 s | 0.00 s | 0.00 s | 1.1 s |  |
+| en_daffodils | photo | 0.08 s | 0.20 s | 0.79 s | 0.00 s | 0.00 s | 1.1 s | 1.6 s (19 sentences, 58 s of audio) |
+| en_daffodils | hard | 0.05 s | 0.21 s | 0.81 s | 1.14 s | 0.00 s | 2.2 s |  |
+| en_daffodils | camera | 0.25 s | 0.34 s | 1.44 s | 1.93 s | 0.00 s | 4.0 s |  |
+| en_water | scan | 0.06 s | 0.30 s | 0.75 s | 0.00 s | 0.00 s | 1.1 s |  |
+| en_water | photo | 0.07 s | 0.31 s | 0.80 s | 0.00 s | 0.00 s | 1.2 s | 2.4 s (18 sentences, 63 s of audio) |
+| en_water | hard | 0.05 s | 0.28 s | 0.66 s | 1.01 s | 0.00 s | 2.0 s |  |
+| en_water | camera | 0.23 s | 0.50 s | 1.39 s | 1.88 s | 0.00 s | 4.0 s |  |
+| ta_kural | scan | 0.06 s | 0.12 s | 0.53 s | 0.00 s | 0.00 s | 0.7 s |  |
+| ta_kural | photo | 0.07 s | 0.13 s | 0.50 s | 0.00 s | 0.00 s | 0.7 s | 2.4 s (22 sentences, 68 s of audio) |
+| ta_kural | hard | 0.05 s | 0.22 s | 1.52 s | 0.00 s | 0.00 s | 1.8 s |  |
+| ta_kural | camera | 0.22 s | 0.24 s | 1.96 s | 2.20 s | 0.00 s | 4.6 s |  |
+| ta_plant | scan | 0.06 s | 0.20 s | 0.57 s | 0.00 s | 0.00 s | 0.8 s |  |
+| ta_plant | photo | 0.07 s | 0.22 s | 0.63 s | 0.00 s | 0.00 s | 0.9 s | 2.1 s (16 sentences, 52 s of audio) |
+| ta_plant | hard | 0.05 s | 0.25 s | 1.04 s | 1.30 s | 0.00 s | 2.6 s |  |
+| ta_plant | camera | 0.23 s | 0.45 s | 3.13 s | 3.42 s | 0.00 s | 7.2 s |  |
+| ta_water | scan | 0.06 s | 0.21 s | 0.98 s | 0.00 s | 0.00 s | 1.2 s |  |
+| ta_water | photo | 0.07 s | 0.48 s | 0.80 s | 0.00 s | 0.00 s | 1.4 s | 2.4 s (18 sentences, 63 s of audio) |
+| ta_water | hard | 0.05 s | 0.32 s | 1.20 s | 1.51 s | 0.00 s | 3.1 s |  |
+| ta_water | camera | 0.23 s | 0.52 s | 2.04 s | 2.53 s | 0.00 s | 5.3 s |  |

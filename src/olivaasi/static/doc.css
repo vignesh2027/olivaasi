@@ -87,6 +87,7 @@ article {
   max-width: 46rem; margin: 0 auto; padding: 1.5rem 1.25rem;
   background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
   font-size: calc(1.2rem * var(--scale));
+  overflow-wrap: anywhere; /* at large text sizes on a phone, a long word may break rather than run off screen */
 }
 article h1 { font-size: 1.6em; line-height: 1.3; color: var(--accent); margin: 0 0 .75em; }
 article h2 { font-size: 1.3em; line-height: 1.3; color: var(--accent); margin: 1.4em 0 .5em; }

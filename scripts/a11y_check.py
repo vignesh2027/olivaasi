@@ -99,6 +99,20 @@ def main() -> int:
             print(f"{name}: {len(v)} violation(s)")
             for item in v:
                 print(f"   [{item['impact']}] {item['id']}: {item['help']}: {item['nodes']}")
+        # Reflow: no sideways scrolling at phone widths, even at 300% text.
+        reflow_fail = 0
+        for w in (320, 360, 390):
+            b.send("Emulation.setDeviceMetricsOverride", width=w, height=800, deviceScaleFactor=1, mobile=True)
+            b.goto(f"{args.base}/doc/{doc}/")
+            for size in (100, 200, 300):
+                b.eval(f"var s=document.getElementById('size'); s.value='{size}'; s.dispatchEvent(new Event('change'))")
+                sw = b.eval("document.documentElement.scrollWidth")
+                cw = b.eval("document.documentElement.clientWidth")
+                if sw > cw + 1:
+                    reflow_fail += 1
+                    print(f"reflow: {w}px wide at {size}% text scrolls sideways ({sw}px of content)")
+        print(f"reflow at 320, 360 and 390 px, text 100/200/300%: {'all fit' if not reflow_fail else str(reflow_fail) + ' failure(s)'}")
+        total += reflow_fail
     print(f"TOTAL {total}")
     return 1 if total else 0
 

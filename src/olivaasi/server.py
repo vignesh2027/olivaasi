@@ -22,6 +22,7 @@ IMAGE_TYPES = {"image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp",
 SAMPLES = {
     "ta_water_photo": ("Tamil science lesson, phone photo", "ta"),
     "ta_kural_photo": ("Tamil Thirukkural lesson, phone photo", "ta"),
+    "ta_kural_camera": ("Tamil Thirukkural lesson, open book under a lamp", "ta"),
     "en_water_photo": ("English science lesson, phone photo", "en"),
     "en_daffodils_photo": ("English poem lesson, phone photo", "en"),
 }

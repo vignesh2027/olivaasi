@@ -252,13 +252,13 @@ def to_markdown(r: dict) -> str:
         "",
         "## Time per page",
         "",
-        "| Page | Image | Clean-up | Tables | OCR | Structure | Recognition total | Speech (sentences, audio length) |",
-        "|---|---|---:|---:|---:|---:|---:|---|",
+        "| Page | Image | Clean-up | Tables | OCR | Second reading (curved lines) | Structure | Recognition total | Speech (sentences, audio length) |",
+        "|---|---|---:|---:|---:|---:|---:|---:|---|",
     ]
     for x in r["rows"]:
         s = x["seconds"]
         speech = f"{x['audio_seconds']:.1f} s ({x['sentences']} sentences, {x['audio_length']:.0f} s of audio)" if "audio_seconds" in x else ""
-        lines.append(f"| {x['page']} | {x['variant']} | {s['clean_up']:.2f} s | {s['tables']:.2f} s | {s['ocr']:.2f} s | {s['structure']:.2f} s | {x['recognise_seconds']:.1f} s | {speech} |")
+        lines.append(f"| {x['page']} | {x['variant']} | {s['clean_up']:.2f} s | {s['tables']:.2f} s | {s['ocr']:.2f} s | {s.get('second_reading', 0):.2f} s | {s['structure']:.2f} s | {x['recognise_seconds']:.1f} s | {speech} |")
     lines.append("")
     return "\n".join(lines)
 
