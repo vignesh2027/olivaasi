@@ -41,8 +41,9 @@ def run_axe(b: Browser) -> list[dict]:
     return res or []
 
 
-def first_doc(base: str) -> str:
-    req = urllib.request.Request(f"{base}/sample", data=b"key=ta_water_photo&audio=1", method="POST")
+def first_doc(base: str, key: str = "ta_water_photo", simple: bool = False) -> str:
+    data = f"key={key}&audio=1" + ("&simple=1" if simple else "")
+    req = urllib.request.Request(f"{base}/sample", data=data.encode(), method="POST")
     req.add_header("Content-Type", "application/x-www-form-urlencoded")
 
     class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -70,6 +71,9 @@ def main() -> int:
     for style in ("standard", "dyslexia", "dark"):
         for size in (100, 300):
             checks.append((f"converted page, {style}, {size}%", f"{args.base}/doc/{doc}/", f"{style}:{size}"))
+    simple_doc = first_doc(args.base, "en_water_photo", simple=True)
+    checks.append(("English page, simplified version shown", f"{args.base}/doc/{simple_doc}/", "simple"))
+    checks.append(("converted page at phone width (settings folded)", f"{args.base}/doc/{doc}/", "phone"))
     total = 0
     with Browser() as b:
         for name, url, mode in checks:
@@ -80,6 +84,12 @@ def main() -> int:
                        "document.querySelector('form[action=\"/convert\"]').submit()")
                 import time
                 time.sleep(1.5)
+            elif mode == "simple":
+                b.eval("document.querySelector('input[name=style][value=standard]').click();"
+                       "var v=document.querySelector('input[name=version][value=simple]'); if(!v) throw new Error('no simplified version'); v.click()")
+            elif mode == "phone":
+                b.send("Emulation.setDeviceMetricsOverride", width=360, height=740, deviceScaleFactor=2, mobile=True)
+                b.goto(url)
             elif mode:
                 style, size = mode.split(":")
                 b.eval(f"document.querySelector('input[name=style][value={style}]').click();"

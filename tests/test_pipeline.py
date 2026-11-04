@@ -57,3 +57,38 @@ def test_server_flow(work, sample_image):
     assert c.get("/doc/../../etc/passwd").status_code == 404
     assert c.get("/doc/zzzzzzzzzzzz/").status_code == 404
     assert c.get(url + "doc.json").status_code == 404
+
+
+def test_simplify_checks_reject_changed_numbers_and_copies():
+    from olivaasi import simplify
+
+    orig = "It has 133 chapters and 1330 couplets in all, which are read in every school in the state."
+    assert "numbers" in simplify.check(orig, "It has 133 chapters and more than 3300 couplets.")
+    assert simplify.check(orig, orig) == "almost the same as the original"
+    assert simplify.check(orig, "It has 133 chapters. It has 1330 couplets. Every school reads them.") == ""
+
+
+@needs_ocr
+def test_simplified_paragraphs_are_labelled_and_original_kept(work, monkeypatch):
+    from olivaasi import simplify
+
+    monkeypatch.setattr(simplify, "available", lambda model=simplify.MODEL: None)
+    monkeypatch.setattr(simplify, "simplify", lambda text, lang, model=simplify.MODEL: simplify.Simplified("Water moves. The Sun heats it. This is called evaporation."))
+    from conftest import ROOT
+
+    out = work / "s"
+    pipeline.convert(ROOT / "eval" / "images" / "en_water_photo.jpg", out, audio=False, simplified=True)
+    html = (out / "index.html").read_text(encoding="utf-8")
+    assert 'class="simple" hidden' in html and "Simplified by computer:" in html
+    assert 'class="orig"' in html and "Water on the Earth does not stay in one place." in html
+    assert 'value="original" checked' in html
+
+
+@needs_ocr
+def test_tamil_paragraphs_are_not_simplified_by_default(work, sample_image, monkeypatch):
+    from olivaasi import simplify
+
+    monkeypatch.setattr(simplify, "available", lambda model=simplify.MODEL: None)
+    monkeypatch.setattr(simplify, "simplify", lambda *a, **k: (_ for _ in ()).throw(AssertionError("must not be called")))
+    r = pipeline.convert(sample_image, work / "t", audio=False, simplified=True)
+    assert any("Tamil paragraph" in n for n in r.notes)

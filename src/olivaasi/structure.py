@@ -52,6 +52,7 @@ class Block:
     conf: float = 100.0
     height: int = 0  # text line height in pixels, used to rank headings
     lines: list[Line] = field(default_factory=list, repr=False)
+    simple: list[Sentence] = field(default_factory=list)  # optional simplified reading of a paragraph
 
     def all_sentences(self) -> list[Sentence]:
         if self.kind == "list":

@@ -1,0 +1,56 @@
+## Tab order on a converted page
+ 1. a: 'Skip to the lesson'  focus outline: yes
+ 2. a: 'Convert another page'  focus outline: yes
+ 3. a: 'Download this page for offline use'  focus outline: yes
+ 4. button[button]: 'Play'  focus outline: yes
+ 5. button[button]: 'Previous sentence'  focus outline: yes
+ 6. button[button]: 'Repeat sentence'  focus outline: yes
+ 7. button[button]: 'Next sentence'  focus outline: yes
+ 8. button[button]: 'Next heading'  focus outline: yes
+ 9. select[select-one]: 'Speed'  focus outline: yes
+10. summary: 'Text size and reading style'  focus outline: yes
+11. select[select-one]: 'Text size'  focus outline: yes
+12. input[radio]: 'Standard'  focus outline: yes
+13. div: 'Table'  focus outline: yes
+14. summary: 'Show the original photo'  focus outline: yes
+15. summary: 'About this page'  focus outline: yes
+
+## Task: reach question 3 and hear it, keyboard only
+Tab pressed 8 times to reach Next heading; Space pressed 3 times to reach the questions heading.
+Space pressed 3 times on Next. Highlighted: 'நீர்ச் சுழற்சியின் மூன்று நிலைகளை வரிசைப்படுத்துக.'. Audio playing: True. Status announced: 'Sentence 17 of 18'.
+Question 3 as printed on the page: '3. நீர்ச் சுழற்சியின் மூன்று நிலைகளை வரிசைப்படுத்துக.'
+
+## What a screen reader receives (Chrome accessibility tree, outline)
+  region: 'Reading and listening settings'
+  group: 'Listen to this page'
+  group: ''
+  group: ''
+  group: ''
+  combobox: 'Text size'
+  group: 'Reading style'
+  heading 1: 'அலகு 5 நீர்ச் சுழற்சி'
+  heading 2: 'மேகங்கள் உருவாதல்'
+  region: 'Table'
+  heading 2: 'சிந்தித்து விடையளி'
+  list: ''
+  button: 'Play'
+  button: 'Previous sentence'
+  button: 'Repeat sentence'
+  button: 'Next sentence'
+  button: 'Next heading'
+  combobox: 'Speed'
+  table: ''
+  listitem 1: ''
+  listitem 1: ''
+  listitem 1: ''
+  listitem 1: ''
+  radio: 'Standard'
+  radio: 'Wide spacing'
+  radio: 'Dark, high contrast'
+  row: ''
+  row: ''
+  row: ''
+  row: ''
+  columnheader: 'நிலை'
+  columnheader: 'நிகழ்வது'
+  lang attributes inside the lesson: {'ta': 7, 'en': 2}

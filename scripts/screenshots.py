@@ -53,9 +53,18 @@ def main() -> int:
         highlight(b, 6)
         b.screenshot(OUT / "04-page-dark-high-contrast.png")
         style(b, "standard", 100)
+        simple = first_doc(args.base, "en_water_photo", simple=True)
+        b.goto(f"{args.base}/doc/{simple}/", wait=1.0)
+        style(b, "standard", 100)
+        b.eval("document.querySelector('input[name=version][value=simple]').click()")
+        b.eval("window.scrollTo(0, 0)")
+        b.screenshot(OUT / "06-page-english-simplified.png")
+        b.eval("document.querySelector('input[name=version][value=original]').click()")
     with Browser(390, 844, scale=2) as b:
+        b.send("Emulation.setDeviceMetricsOverride", width=390, height=844, deviceScaleFactor=2, mobile=True)
         b.goto(url, wait=1.0)
         style(b, "standard", 100)
+        b.goto(url, wait=1.0)
         b.screenshot(OUT / "05-page-phone-width.png")
     print("wrote", sorted(p.name for p in OUT.glob("*.png")))
     return 0

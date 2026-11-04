@@ -52,6 +52,7 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("-o", "--out", type=Path, required=True, help="output folder")
     c.add_argument("--lang", choices=list(ocr.LANG_CHOICES), default="tam+eng")
     c.add_argument("--no-audio", action="store_true")
+    c.add_argument("--simplify", action="store_true", help="also add simplified paragraphs (needs Ollama running locally)")
     sub.add_parser("doctor", help="check the offline setup")
     args = p.parse_args(argv)
 
@@ -60,7 +61,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "convert":
         from .pipeline import convert
 
-        r = convert(args.photo, args.out, langs=args.lang, audio=not args.no_audio)
+        r = convert(args.photo, args.out, langs=args.lang, audio=not args.no_audio, simplified=args.simplify)
         secs = ", ".join(f"{k} {v:.1f}s" for k, v in r.timings.items())
         print(f"Wrote {r.out_dir / 'index.html'}  ({len(r.doc.blocks)} blocks, {len(r.doc.sentences())} sentences; {secs})")
         return 0

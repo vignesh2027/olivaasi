@@ -46,6 +46,13 @@
         <input type="checkbox" id="audio" name="audio" value="1" checked>
         <label for="audio">Make an audio track that highlights each sentence as it is read</label>
       </div>
+      <div class="field check">
+        <input type="checkbox" id="simple" name="simple" value="1" aria-describedby="simple-hint"{% if simplify_off %} disabled{% endif %}>
+        <div>
+          <label for="simple">Also make a simplified version of English paragraphs (optional, slower)</label>
+          <p class="hint" id="simple-hint">{% if simplify_off %}Not available: {{ simplify_off }} Olivaasi works fully without it.{% else %}Uses the local model {{ simplify_model }}. Tamil paragraphs are not simplified, because in our tests the model changed their meaning too often. Questions, poems and tables are never changed. Every simplified paragraph is labelled, and the original is one tap away. A computer can still change meaning, so check with a teacher.{% endif %}</p>
+        </div>
+      </div>
       <button type="submit">Convert page</button>
     </form>
   </section>

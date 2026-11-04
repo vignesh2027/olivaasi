@@ -13,7 +13,7 @@ from pathlib import Path
 import cv2
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from . import __version__, config, ocr, preprocess, structure, tables, tts
+from . import __version__, config, ocr, preprocess, simplify, structure, tables, tts
 
 _env = Environment(
     loader=FileSystemLoader(config.PACKAGE_DIR / "templates"),
@@ -92,8 +92,36 @@ def recognise(image, langs: str = "tam+eng") -> tuple[structure.Document, list[s
     return doc, prepared.notes, timings, conf
 
 
-def speech_clips(doc: structure.Document) -> list[tuple[int, tts.Clip]]:
-    """What to say for each sentence, in order. List items are read with their number."""
+def add_simplified(doc: structure.Document) -> list[str]:
+    """Add a simplified reading to each prose paragraph, where the checks allow it."""
+    made, skipped, tamil_off = 0, [], 0
+    next_id = max((s.id for s in doc.sentences()), default=0) + 1
+    for b in doc.blocks:
+        if b.kind != "paragraph" or len(" ".join(s.text for s in b.sentences)) < 60:
+            continue
+        if b.lang == "ta" and not simplify.TAMIL:
+            tamil_off += 1
+            continue
+        r = simplify.simplify(" ".join(s.text for s in b.sentences), b.lang)
+        if r.text is None:
+            skipped.append(r.reason)
+            continue
+        b.simple = structure.make_sentences(r.text, b.lang)
+        for sent in b.simple:
+            sent.id = next_id
+            next_id += 1
+        made += 1
+    notes = [f"Simplified {made} paragraph(s) with a local model ({simplify.MODEL}); questions, verse and tables are never simplified."]
+    if skipped:
+        notes.append(f"Kept {len(skipped)} paragraph(s) only in the original: " + "; ".join(sorted(set(skipped))) + ".")
+    if tamil_off:
+        notes.append(f"{tamil_off} Tamil paragraph(s) were not simplified: in our tests the local model changed the meaning or the grammar of Tamil text too often to be safe for a learner (see EVALUATION.md).")
+    return notes
+
+
+def speech_clips(doc: structure.Document, simple: bool = False) -> list[tuple[int, tts.Clip]]:
+    """What to say for each sentence, in order. List items are read with their number.
+    With simple=True, paragraphs that have a simplified reading use it."""
     out: list[tuple[int, tts.Clip]] = []
     for b in doc.blocks:
         end_pause = 700
@@ -103,7 +131,7 @@ def speech_clips(doc: structure.Document) -> list[tuple[int, tts.Clip]]:
                     text = f"{it.label}. {s.text}" if k == 0 else s.text
                     out.append((s.id, tts.Clip(text, s.lang, 500)))
         else:
-            for s in b.all_sentences():
+            for s in (b.simple if simple and b.simple else b.all_sentences()):
                 out.append((s.id, tts.Clip(s.text, s.lang, 350)))
         if out:
             out[-1][1].pause_ms = end_pause
@@ -111,7 +139,8 @@ def speech_clips(doc: structure.Document) -> list[tuple[int, tts.Clip]]:
 
 
 def render(doc: structure.Document, *, app_nav: bool, audio_file: str | None, timings: dict[int, tts.Timing],
-           original_file: str | None, confidence: float, langs: str, notes: list[str], voice_note: str) -> str:
+           original_file: str | None, confidence: float, langs: str, notes: list[str], voice_note: str,
+           audio_file_s: str | None = None, timings_s: dict[int, tts.Timing] | None = None) -> str:
     static = config.PACKAGE_DIR / "static"
     return _env.get_template("document.html").render(
         doc=doc,
@@ -119,6 +148,9 @@ def render(doc: structure.Document, *, app_nav: bool, audio_file: str | None, ti
         app_nav=app_nav,
         audio_file=audio_file,
         timings=timings,
+        audio_file_s=audio_file_s,
+        timings_s=timings_s or {},
+        has_simple=any(b.simple for b in doc.blocks),
         original_file=original_file,
         confidence=confidence,
         langs_label=ocr.LANG_CHOICES.get(langs, langs),
@@ -132,7 +164,7 @@ def render(doc: structure.Document, *, app_nav: bool, audio_file: str | None, ti
     )
 
 
-def convert(image_path: Path, out_dir: Path, langs: str = "tam+eng", audio: bool = True) -> Result:
+def convert(image_path: Path, out_dir: Path, langs: str = "tam+eng", audio: bool = True, simplified: bool = False) -> Result:
     """Run the whole pipeline and write index.html (standalone), view.html (with app links),
     audio.m4a or audio.wav, original.jpg, text.txt and doc.json into out_dir."""
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -140,14 +172,21 @@ def convert(image_path: Path, out_dir: Path, langs: str = "tam+eng", audio: bool
     image = preprocess.load(image_path)
     doc, notes, stage, conf = recognise(image, langs)
 
+    if simplified:
+        t = time.perf_counter()
+        reason = simplify.available()
+        notes.extend([f"No simplified reading: {reason}"] if reason else add_simplified(doc))
+        stage["simplify"] = time.perf_counter() - t
+
     original = out_dir / "original.jpg"
     h, w = image.shape[:2]
     scale = min(1.0, 1600 / max(h, w))
     small = cv2.resize(image, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA) if scale < 1 else image
     cv2.imwrite(str(original), small, [cv2.IMWRITE_JPEG_QUALITY, 80])
 
-    audio_file = None
+    audio_file = audio_file_s = None
     sent_timings: dict[int, tts.Timing] = {}
+    sent_timings_s: dict[int, tts.Timing] = {}
     voice_note = ""
     t = time.perf_counter()
     backend = tts.pick_backend() if audio else None
@@ -156,6 +195,11 @@ def convert(image_path: Path, out_dir: Path, langs: str = "tam+eng", audio: bool
         path, times = tts.build_track([c for _, c in clips], out_dir, backend)
         sent_timings = {sid: tm for (sid, _), tm in zip(clips, times)}
         audio_file = path.name
+        if any(b.simple for b in doc.blocks):
+            clips_s = speech_clips(doc, simple=True)
+            path_s, times_s = tts.build_track([c for _, c in clips_s], out_dir, backend, name="audio-simple")
+            sent_timings_s = {sid: tm for (sid, _), tm in zip(clips_s, times_s)}
+            audio_file_s = path_s.name
         voices = sorted({backend.voice_for(c.lang) or "default" for _, c in clips})
         voice_note = f"{backend.name}, voice {', '.join(voices)}"
     elif audio:
@@ -163,7 +207,7 @@ def convert(image_path: Path, out_dir: Path, langs: str = "tam+eng", audio: bool
     stage["audio"] = time.perf_counter() - t
 
     t = time.perf_counter()
-    common = dict(audio_file=audio_file, timings=sent_timings, original_file=original.name,
+    common = dict(audio_file=audio_file, timings=sent_timings, audio_file_s=audio_file_s, timings_s=sent_timings_s, original_file=original.name,
                   confidence=conf, langs=langs, notes=notes, voice_note=voice_note)
     (out_dir / "index.html").write_text(render(doc, app_nav=False, **common), encoding="utf-8")
     (out_dir / "view.html").write_text(render(doc, app_nav=True, **common), encoding="utf-8")
@@ -195,6 +239,8 @@ def _block_json(b: structure.Block) -> dict:
         d["rows"] = b.rows
     else:
         d["sentences"] = [s.text for s in b.sentences]
+    if b.simple:
+        d["simplified"] = [s.text for s in b.simple]
     return d
 
 

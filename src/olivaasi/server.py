@@ -14,9 +14,10 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.concurrency import run_in_threadpool
 
-from . import __version__, config, ocr, pipeline
+from . import __version__, config, ocr, pipeline, simplify
 
 MAX_BYTES = 15 * 1024 * 1024
+FILES = ("index.html", "audio.m4a", "audio.wav", "audio-simple.m4a", "audio-simple.wav", "original.jpg", "text.txt")
 IMAGE_TYPES = {"image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp", "image/tiff": ".tif", "image/bmp": ".bmp"}
 SAMPLES = {
     "ta_water_photo": ("Tamil science lesson, phone photo", "ta"),
@@ -54,7 +55,8 @@ def page(request: Request, *, error: str | None = None, status: int = 200, lang:
     return templates.TemplateResponse(
         request,
         "index.html",
-        {"error": error, "langs": ocr.LANG_CHOICES, "lang": lang, "samples": samples, "recent": recent(), "version": __version__},
+        {"error": error, "langs": ocr.LANG_CHOICES, "lang": lang, "samples": samples, "recent": recent(), "version": __version__,
+         "simplify_off": simplify.available(), "simplify_model": simplify.MODEL},
         status_code=status,
     )
 
@@ -64,13 +66,14 @@ def index(request: Request):
     return page(request)
 
 
-async def _convert(src: Path, doc_dir: Path, lang: str, audio: bool) -> RedirectResponse:
-    await run_in_threadpool(pipeline.convert, src, doc_dir, lang, audio)
+async def _convert(src: Path, doc_dir: Path, lang: str, audio: bool, simplified: bool = False) -> RedirectResponse:
+    await run_in_threadpool(pipeline.convert, src, doc_dir, lang, audio, simplified)
     return RedirectResponse(f"/doc/{doc_dir.name}/", status_code=303)
 
 
 @app.post("/convert")
-async def convert(request: Request, photo: UploadFile = File(None), lang: str = Form("tam+eng"), audio: str | None = Form(None)):
+async def convert(request: Request, photo: UploadFile = File(None), lang: str = Form("tam+eng"), audio: str | None = Form(None),
+                  simple: str | None = Form(None)):
     if lang not in ocr.LANG_CHOICES:
         lang = "tam+eng"
     if photo is None or not photo.filename:
@@ -86,19 +89,19 @@ async def convert(request: Request, photo: UploadFile = File(None), lang: str = 
     src = doc_dir / f"input{ext}"
     src.write_bytes(data)
     try:
-        return await _convert(src, doc_dir, lang, audio is not None)
+        return await _convert(src, doc_dir, lang, audio is not None, simple is not None)
     except ValueError:
         return page(request, error="That file could not be opened as an image. Try another photo.", status=400, lang=lang)
 
 
 @app.post("/sample")
-async def sample(request: Request, key: str = Form(...), audio: str | None = Form(None)):
+async def sample(request: Request, key: str = Form(...), audio: str | None = Form(None), simple: str | None = Form(None)):
     src = sample_path(key) if key in SAMPLES else None
     if src is None:
         return page(request, error="That sample page is missing.", status=404)
     lang = "tam+eng"
     doc_dir = config.work_dir() / secrets.token_hex(6)
-    return await _convert(src, doc_dir, lang, audio is not None)
+    return await _convert(src, doc_dir, lang, audio is not None, simple is not None)
 
 
 def _doc_dir(doc_id: str) -> Path:
@@ -126,7 +129,7 @@ def doc_download(doc_id: str):
     d = _doc_dir(doc_id)
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
-        for name in ("index.html", "audio.m4a", "audio.wav", "original.jpg", "text.txt"):
+        for name in FILES:
             if (d / name).exists():
                 z.write(d / name, f"olivaasi-{doc_id}/{name}")
     buf.seek(0)
@@ -137,7 +140,7 @@ def doc_download(doc_id: str):
 @app.get("/doc/{doc_id}/{name}")
 def doc_file(doc_id: str, name: str):
     d = _doc_dir(doc_id)
-    if name not in {"audio.m4a", "audio.wav", "original.jpg", "text.txt", "index.html"}:
+    if name not in FILES:
         raise HTTPException(404)
     path = d / name
     if not path.exists():

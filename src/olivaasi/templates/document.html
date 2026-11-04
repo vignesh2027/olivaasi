@@ -1,5 +1,5 @@
-{%- macro say(s) -%}
-<span class="s"{% if s.id in timings %} data-start="{{ timings[s.id].start }}" data-end="{{ timings[s.id].end }}"{% endif %}{% if s.lang != block_lang %} lang="{{ s.lang }}"{% endif %}>
+{%- macro say(s, bl) -%}
+<span class="s"{% if s.id in timings %} data-start="{{ timings[s.id].start }}"{% endif %}{% if s.id in timings_s %} data-start-s="{{ timings_s[s.id].start }}"{% endif %}{% if s.lang != bl %} lang="{{ s.lang }}"{% endif %}>
 {%- for text, lang in s.segments() -%}
 {%- if lang %}<span lang="{{ lang }}">{{ text }}</span>{% else %}{{ text }}{% endif -%}
 {%- endfor -%}
@@ -27,38 +27,55 @@
   {%- endif %}
 </header>
 <section class="controls" aria-label="Reading and listening settings">
-  <div>
-    <label for="size">Text size</label>
-    <select id="size">
-      {%- for v in [100, 125, 150, 200, 250, 300] %}
-      <option value="{{ v }}"{% if v == 100 %} selected{% endif %}>{{ v }}%</option>
-      {%- endfor %}
-    </select>
-  </div>
-  <fieldset>
-    <legend>Reading style</legend>
-    <label><input type="radio" name="style" value="standard" checked> Standard</label>
-    <label><input type="radio" name="style" value="dyslexia"> Wide spacing</label>
-    <label><input type="radio" name="style" value="dark"> Dark, high contrast</label>
-  </fieldset>
   {%- if audio_file %}
-  <div>
+  <div class="listen">
     <span id="audio-label" class="visually-hidden">Listen to this page</span>
     <div class="audio" role="group" aria-labelledby="audio-label">
-      <audio id="player" controls preload="metadata" src="{{ audio_file }}" aria-label="Audio of this page"></audio>
-      <button type="button" id="prev" class="secondary">Previous sentence</button>
-      <button type="button" id="again" class="secondary">Repeat sentence</button>
-      <button type="button" id="next" class="secondary">Next sentence</button>
-      <label class="visually-hidden" for="speed">Speed</label>
-      <select id="speed" aria-label="Speed">
-        <option value="0.75">Slow</option>
-        <option value="1" selected>Normal speed</option>
-        <option value="1.25">Fast</option>
-      </select>
+      <audio id="player" controls preload="metadata" src="{{ audio_file }}" data-src="{{ audio_file }}"{% if audio_file_s %} data-src-simple="{{ audio_file_s }}"{% endif %} aria-label="Audio of this page"></audio>
+      <div class="buttons" id="buttons" hidden>
+        <button type="button" id="play">Play</button>
+        <button type="button" id="prev" class="secondary">Previous<span class="visually-hidden"> sentence</span></button>
+        <button type="button" id="again" class="secondary">Repeat<span class="visually-hidden"> sentence</span></button>
+        <button type="button" id="next" class="secondary">Next<span class="visually-hidden"> sentence</span></button>
+        <button type="button" id="nexth" class="secondary">Next heading</button>
+        <label class="visually-hidden" for="speed">Speed</label>
+        <select id="speed">
+          <option value="0.75">Slow</option>
+          <option value="1" selected>Normal speed</option>
+          <option value="1.25">Fast</option>
+        </select>
+        <span id="time" class="time">0:00</span>
+      </div>
     </div>
     <p id="where" class="visually-hidden" role="status"></p>
   </div>
   {%- endif %}
+  <details class="settings" id="settings" open>
+    <summary>Text size and reading style</summary>
+    <div class="settings-body">
+      <div>
+        <label for="size">Text size</label>
+        <select id="size">
+          {%- for v in [100, 125, 150, 200, 250, 300] %}
+          <option value="{{ v }}"{% if v == 100 %} selected{% endif %}>{{ v }}%</option>
+          {%- endfor %}
+        </select>
+      </div>
+      <fieldset>
+        <legend>Reading style</legend>
+        <label><input type="radio" name="style" value="standard" checked> Standard</label>
+        <label><input type="radio" name="style" value="dyslexia"> Wide spacing</label>
+        <label><input type="radio" name="style" value="dark"> Dark, high contrast</label>
+      </fieldset>
+      {%- if has_simple %}
+      <fieldset>
+        <legend>Text version</legend>
+        <label><input type="radio" name="version" value="original" checked> Original, as printed</label>
+        <label><input type="radio" name="version" value="simple"> Simplified by computer</label>
+      </fieldset>
+      {%- endif %}
+    </div>
+  </details>
 </section>
 <main id="lesson" tabindex="-1">
   <p class="notice">This text was read from a photo by a computer and may have mistakes. Check important words against the printed page.</p>
@@ -67,17 +84,19 @@
     <h1 lang="en">Converted page</h1>
     {%- endif %}
     {%- for b in doc.blocks %}
-    {%- set block_lang = b.lang %}
     {%- if b.kind == "heading" %}
-    <h{{ b.level }} lang="{{ b.lang }}">{% for s in b.sentences %}{{ say(s) }}{% endfor %}</h{{ b.level }}>
+    <h{{ b.level }} lang="{{ b.lang }}">{% for s in b.sentences %}{{ say(s, b.lang) }}{% endfor %}</h{{ b.level }}>
     {%- elif b.kind == "paragraph" %}
-    <p lang="{{ b.lang }}">{% for s in b.sentences %}{{ say(s) }}{% if not loop.last %} {% endif %}{% endfor %}</p>
+    <p lang="{{ b.lang }}"{% if b.simple %} class="orig"{% endif %}>{% for s in b.sentences %}{{ say(s, b.lang) }}{% if not loop.last %} {% endif %}{% endfor %}</p>
+    {%- if b.simple %}
+    <p lang="{{ b.lang }}" class="simple" hidden><strong class="badge" lang="en">Simplified by computer:</strong> {% for s in b.simple %}{{ say(s, b.lang) }}{% if not loop.last %} {% endif %}{% endfor %}</p>
+    {%- endif %}
     {%- elif b.kind == "verse" %}
-    <p class="verse" lang="{{ b.lang }}">{% for s in b.sentences %}{{ say(s) }}{% if not loop.last %}<br>{% endif %}{% endfor %}</p>
+    <p class="verse" lang="{{ b.lang }}">{% for s in b.sentences %}{{ say(s, b.lang) }}{% if not loop.last %}<br>{% endif %}{% endfor %}</p>
     {%- elif b.kind == "list" %}
     <ol class="questions" lang="{{ b.lang }}">
       {%- for it in b.items %}
-      <li><span class="label">{{ it.label }}.</span> {% for s in it.sentences %}{{ say(s) }}{% if not loop.last %} {% endif %}{% endfor %}</li>
+      <li><span class="label">{{ it.label }}.</span> {% for s in it.sentences %}{{ say(s, b.lang) }}{% if not loop.last %} {% endif %}{% endfor %}</li>
       {%- endfor %}
     </ol>
     {%- elif b.kind == "table" %}
@@ -86,7 +105,7 @@
       {%- for row in b.rows %}
       {%- set rs = b.row_sentences[loop.index0] if loop.index0 < b.row_sentences|length else none %}
       {%- set is_head = b.rows|length > 1 and loop.first %}
-      <tr{% if rs and rs.id in timings %} data-start="{{ timings[rs.id].start }}"{% endif %}>
+      <tr{% if rs and rs.id in timings %} data-start="{{ timings[rs.id].start }}"{% endif %}{% if rs and rs.id in timings_s %} data-start-s="{{ timings_s[rs.id].start }}"{% endif %}>
         {%- for cell in row %}
         {%- if is_head %}
         <th scope="col">{{ cell }}</th>
@@ -99,7 +118,7 @@
     </table>
     </div>
     {%- elif b.kind == "pagenum" %}
-    <p class="pagenum"><span lang="en">Page</span> {{ say(b.sentences[0]) }}</p>
+    <p class="pagenum"><span lang="en">Page</span> {{ say(b.sentences[0], b.lang) }}</p>
     {%- endif %}
     {%- endfor %}
   </article>

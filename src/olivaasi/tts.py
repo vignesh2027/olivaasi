@@ -196,7 +196,7 @@ def split_on_gaps(audio: np.ndarray, n: int, min_gap_s: float = 0.8) -> list[np.
     return [trim(audio[a:b]) for a, b in zip(cuts, cuts[1:])]
 
 
-def build_track(clips: list[Clip], out_dir: Path, backend: Backend) -> tuple[Path, list[Timing]]:
+def build_track(clips: list[Clip], out_dir: Path, backend: Backend, name: str = "audio") -> tuple[Path, list[Timing]]:
     """Speak each clip, join them with short pauses, and return the track and per-clip timings."""
     out_dir.mkdir(parents=True, exist_ok=True)
     audio: list[np.ndarray] = []
@@ -219,7 +219,7 @@ def build_track(clips: list[Clip], out_dir: Path, backend: Backend) -> tuple[Pat
         gap = np.zeros(int(RATE * clip.pause_ms / 1000), dtype=np.int16)
         pieces += [sound, gap]
         t += dur + len(gap) / RATE
-    wav_path = out_dir / "audio.wav"
+    wav_path = out_dir / f"{name}.wav"
     with wave.open(str(wav_path), "wb") as w:
         w.setnchannels(1)
         w.setsampwidth(2)
