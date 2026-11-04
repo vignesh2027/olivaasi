@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import base64
 import datetime as dt
 import json
 import shutil
@@ -91,6 +92,7 @@ def render(doc: structure.Document, *, app_nav: bool, audio_file: str | None, ti
         version=__version__,
         css=(static / "doc.css").read_text(encoding="utf-8"),
         js=(static / "doc.js").read_text(encoding="utf-8"),
+        logo_uri="data:image/svg+xml;base64," + base64.b64encode((static / "logo.svg").read_bytes()).decode(),
     )
 
 

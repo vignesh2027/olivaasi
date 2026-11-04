@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from padi import config
+from olivaasi import config
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -24,8 +24,8 @@ needs_ocr = pytest.mark.skipif(not _has_tamil_ocr(), reason="Tesseract with Tami
 
 @pytest.fixture
 def work(tmp_path, monkeypatch):
-    monkeypatch.setenv("PADI_WORK", str(tmp_path / "work"))
-    monkeypatch.setenv("PADI_TTS", "none")  # keep tests fast and voice-independent
+    monkeypatch.setenv("OLIVAASI_WORK", str(tmp_path / "work"))
+    monkeypatch.setenv("OLIVAASI_TTS", "none")  # keep tests fast and voice-independent
     return tmp_path
 
 

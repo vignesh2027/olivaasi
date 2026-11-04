@@ -1,4 +1,4 @@
-"""Padi: offline accessible pages from photos of Tamil and English textbooks."""
+"""Olivaasi: offline accessible pages from photos of Tamil and English textbooks."""
 
 __version__ = "0.1.0"
 

@@ -1,7 +1,7 @@
 (function () {
   var root = document.documentElement, body = document.body;
-  function save(k, v) { try { localStorage.setItem("padi." + k, v); } catch (e) {} }
-  function load(k) { try { return localStorage.getItem("padi." + k); } catch (e) { return null; } }
+  function save(k, v) { try { localStorage.setItem("olivaasi." + k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem("olivaasi." + k); } catch (e) { return null; } }
 
   var size = document.getElementById("size");
   function setSize(v) { root.style.setProperty("--scale", v / 100); size.value = v; save("size", v); }

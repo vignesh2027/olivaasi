@@ -1,4 +1,4 @@
-"""Command line: padi serve | padi convert PHOTO | padi doctor"""
+"""Command line: olivaasi serve | olivaasi convert PHOTO | olivaasi doctor"""
 
 from __future__ import annotations
 
@@ -42,7 +42,7 @@ def doctor() -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
-    p = argparse.ArgumentParser(prog="padi", description="Turn a photo of a textbook page into an accessible page with audio, offline.")
+    p = argparse.ArgumentParser(prog="olivaasi", description="Turn a photo of a textbook page into an accessible page with audio, offline.")
     sub = p.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("serve", help="start the local web app")
     s.add_argument("--host", default="127.0.0.1")
@@ -67,7 +67,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "serve":
         import uvicorn
 
-        print(f"Padi is running. Open http://{args.host}:{args.port}/ in a browser. Press Ctrl+C to stop.")
-        uvicorn.run("padi.server:app", host=args.host, port=args.port, log_level="warning")
+        print(f"Olivaasi is running. Open http://{args.host}:{args.port}/ in a browser. Press Ctrl+C to stop.")
+        uvicorn.run("olivaasi.server:app", host=args.host, port=args.port, log_level="warning")
         return 0
     return 2

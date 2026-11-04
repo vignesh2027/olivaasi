@@ -1,6 +1,6 @@
 import numpy as np
 
-from padi import tts
+from olivaasi import tts
 
 
 def tone(seconds):

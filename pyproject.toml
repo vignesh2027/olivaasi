@@ -1,5 +1,5 @@
 [project]
-name = "padi"
+name = "olivaasi"
 version = "0.1.0"
 description = "Offline accessible pages and audio from photos of Tamil and English textbook pages"
 authors = [
@@ -17,7 +17,7 @@ dependencies = [
 ]
 
 [project.scripts]
-padi = "padi:main"
+olivaasi = "olivaasi:main"
 
 [build-system]
 requires = ["uv_build>=0.11.14,<0.12.0"]

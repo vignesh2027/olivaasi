@@ -1,6 +1,23 @@
-# Padi: design
+# Olivaasi: design
 
-Padi (படி, "read") turns a photo of a printed textbook page into an accessible page a student can read with a screen reader, at a large font, in a dyslexia-friendly layout, or by listening, on a laptop with no internet.
+Olivaasi (ஒலிவாசி, from ஒலி "sound, voice" and வாசி "read") turns a photo of a printed textbook page into an accessible page a student can read with a screen reader, at a large font, in a dyslexia-friendly layout, or by listening, on a laptop with no internet.
+
+## Name
+
+The working name was Padi (படி, "read"). It was dropped on 4 Nov 2026 after a search showed real collisions, and Olivaasi was chosen after checking each candidate on GitHub (repositories, users and organisations, code), the Apple App Store (iTunes Search API), Google Play (store search page), PyPI, the web, and DNS for the .com, .org, .in and .app domains.
+
+| Candidate | Result | Decision |
+|---|---|---|
+| Padi | PADI, the Professional Association of Diving Instructors, a large trademarked brand that fills both app stores; Google Play also lists "Padi App : TN Samacheer Kalvi", a Tamil Nadu textbook app in the same space, plus "My Padi", "Padi Business" and "Padiku" | Rejected |
+| Vaasi | App Store "Vaasi Tamil & English Phonics"; Google Play "Vaasi - Books for kids" | Rejected |
+| Thiravu (திறவு, "open") | GitHub "openassistiveaiapps/thiravugal-app", an assistive app with a near-identical name | Rejected |
+| Kanoli | 18 GitHub repositories and 35 users, including a Kanban app | Rejected |
+| Olipakkam (ஒலிப்பக்கம், "sound page") | No product or company, but it is the name of a village in Ranipet district (Tamil Nadu gazette, pincode and map data), so searches would lead there | Not chosen |
+| **Olivaasi** | No App Store or Google Play app, no GitHub repository, user, organisation or code mention, no PyPI package, no web result, and none of olivaasi.com, .org, .in or .app resolves | **Chosen** |
+
+Limits of this check: it is a search for notable existing use, not a legal trademark clearance. The Indian trademark register (IP India public search) needs an interactive captcha and was not searched. The spelling with one "a" (Olivasi) appears as an unrelated word in other languages and in expired-domain lists; the project always uses the double "aa".
+
+A note on meaning: வாசி is the verb "read". As a suffix it can also mean "one who lives in" (as in நகரவாசி, city dweller), so the name can be heard as "one who reads aloud" or, loosely, "one who lives in sound". Both fit a tool for listening to a page.
 
 ## The learner
 
@@ -18,10 +35,10 @@ Why the existing routes fail her on the night:
 * Phone OCR apps that handle Tamil mostly need the internet, and they return a flat block of text: headings, question numbers and tables are lost, so a screen reader reads everything as one paragraph.
 * Large-print copies are made by hand and arrive late.
 
-## What Padi does
+## What Olivaasi does
 
 1. Selvam or Kayal photographs the page with any phone or webcam and copies the image to the laptop, or opens it directly on the laptop.
-2. Padi cleans the image (greyscale, deskew, contrast), runs Tesseract OCR with the Tamil and English models, and keeps the layout signals Tesseract reports: block and line positions and text heights.
+2. Olivaasi cleans the image (greyscale, deskew, contrast), runs Tesseract OCR with the Tamil and English models, and keeps the layout signals Tesseract reports: block and line positions and text heights.
 3. It rebuilds structure: headings from larger, short lines; numbered questions (1. 2. 3., (அ) (ஆ) and Tamil numerals) as an ordered list; paragraphs from blocks; tables from ruled grids.
 4. It writes a single self-contained HTML page with real `h1`/`h2`, `ol`, `p` and `table` elements, a `lang` attribute on every block (`ta` or `en`, so a screen reader switches voice), a font size control, a dyslexia-friendly mode (wider spacing, left aligned, no italics, cream background option) and a high-visibility mode.
 5. It records audio offline, one sentence at a time, and joins it into one track with sentence timings, so the page highlights the sentence being spoken and any sentence can be replayed by clicking it or pressing a key.
@@ -55,7 +72,7 @@ Everything at runtime. Installing needs the internet once (Python packages, Tess
 * Speech: the operating system voice. On macOS, `say` with the Tamil voice "Vani" and an Indian English voice, both offline once installed. On Linux and Windows, `espeak-ng` (GPL 3.0, run as a separate program) which has Tamil, robotic but intelligible. There is no high-quality, permissively licensed, small offline Tamil neural voice we could find: Meta's MMS Tamil model is CC BY-NC 4.0 and AI4Bharat's Indic Parler-TTS is too large for an 8 GB laptop at usable speed. This is a known limitation.
 * Server and UI: Python, FastAPI, Jinja templates, plain CSS, a few lines of inline JavaScript only for audio highlighting and settings. No frontend toolchain.
 
-## Accessibility of Padi itself (target WCAG 2.2 AA)
+## Accessibility of Olivaasi itself (target WCAG 2.2 AA)
 
 * All controls are native HTML elements with visible labels; no custom widgets.
 * Visible focus ring, skip link, logical heading order, `lang` on every block.

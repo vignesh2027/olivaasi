@@ -51,11 +51,11 @@ Description fields: Devpost's standard story fields; the rules ask that the stor
 * "Identify work created during the event and distinguish it from pre-existing work."
 * "Build your event contribution during October 17–November 20, 2026; clearly identify any pre-existing foundation."
 
-Padi was started from an empty repository on 4 Nov 2026, inside the window. Every line of project code is event work. Pre-existing foundations are third-party open source components only (Tesseract and its trained models, the operating system voices, Python libraries), and they are listed in the README credits.
+Olivaasi was started from an empty repository on 4 Nov 2026, inside the window. Every line of project code is event work. Pre-existing foundations are third-party open source components only (Tesseract and its trained models, the operating system voices, Python libraries), and they are listed in the README credits.
 
 ## Entering the same project elsewhere
 
-The overview, rules and resources pages say nothing about submitting the same project to another hackathon. The only related rule is "Submit one final entry per project", which limits entries within this event. We will not assume permission: if Padi is ever entered elsewhere, check that event's rules first, and do not enter it in any other event before the AccessED results are published.
+The overview, rules and resources pages say nothing about submitting the same project to another hackathon. The only related rule is "Submit one final entry per project", which limits entries within this event. We will not assume permission: if Olivaasi is ever entered elsewhere, check that event's rules first, and do not enter it in any other event before the AccessED results are published.
 
 ## Data and content rules
 
@@ -65,13 +65,13 @@ The overview, rules and resources pages say nothing about submitting the same pr
 * Overview adds: "Do not submit private student records, real grades," and then the sentence is cut off on the live page ("real grades, November 22."). We read it as also excluding identifiable learner data.
 * Resources page: "Use made-up learner data."
 
-Consequences for Padi: the learner in DESIGN.md is a made-up person; the evaluation pages are typeset by us from public-domain Tamil and English text unless a textbook licence clearly permits reuse; no login, no personal data, no network calls.
+Consequences for Olivaasi: the learner in DESIGN.md is a made-up person; the evaluation pages are typeset by us from public-domain Tamil and English text unless a textbook licence clearly permits reuse; no login, no personal data, no network calls.
 
 ## Judging criteria
 
 Four criteria, equal weight, each scored 1 to 5, ranked by total. Ties broken by Barrier Removed, then Learning Value, then judges' comparison. "Unverifiable claims and nonfunctional core features may reduce scores."
 
-| Criterion | What the page asks | How Padi answers it |
+| Criterion | What the page asks | How Olivaasi answers it |
 |---|---|---|
 | Barrier Removed | "Does the project identify a specific obstacle to learning and show a credible improvement for the intended learner? Reward a clear before-and-after and thoughtful understanding of real constraints." | One named learner, one obstacle (a printed Tamil textbook page she cannot read), before and after shown on the same page. Real constraints: no internet, shared old laptop, Tamil script. |
 | Learning Value | "Does the prototype help someone understand, practice, teach, or reach useful learning material? Assess educational relevance, clarity, and a concrete learning task rather than unsupported claims of better outcomes." | Concrete task: read a lesson page and answer its numbered questions. No claims about grades. |

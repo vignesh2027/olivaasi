@@ -3,9 +3,9 @@
 Used by scripts/a11y_check.py and scripts/screenshots.py. Starts its own
 Chrome with its own profile folder and debugging port, and closes it after.
 
-    PADI_CHROME   path to the Chrome binary
-    PADI_CDP_PORT debugging port (default 9530)
-    PADI_PROFILE  profile folder (default: a fresh temporary folder)
+    OLIVAASI_CHROME   path to the Chrome binary
+    OLIVAASI_CDP_PORT debugging port (default 9530)
+    OLIVAASI_PROFILE  profile folder (default: a fresh temporary folder)
 """
 
 from __future__ import annotations
@@ -21,13 +21,13 @@ from pathlib import Path
 
 import websocket
 
-CHROME = os.environ.get("PADI_CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+CHROME = os.environ.get("OLIVAASI_CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 
 
 class Browser:
     def __init__(self, width: int = 1280, height: int = 900, scale: float = 1.0) -> None:
-        self.port = int(os.environ.get("PADI_CDP_PORT", "9530"))
-        profile = os.environ.get("PADI_PROFILE") or tempfile.mkdtemp(prefix="padi-cdp-")
+        self.port = int(os.environ.get("OLIVAASI_CDP_PORT", "9530"))
+        profile = os.environ.get("OLIVAASI_PROFILE") or tempfile.mkdtemp(prefix="olivaasi-cdp-")
         Path(profile).mkdir(parents=True, exist_ok=True)
         self.proc = subprocess.Popen(
             [CHROME, "--headless=new", f"--remote-debugging-port={self.port}", f"--user-data-dir={profile}",

@@ -10,16 +10,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="generator" content="Padi {{ version }}">
-<title>{{ doc.title }} | Padi</title>
+<meta name="generator" content="Olivaasi {{ version }}">
+<title>{{ doc.title }} | Olivaasi</title>
+<link rel="icon" href="{{ logo_uri }}" type="image/svg+xml">
 <style>{{ css | safe }}</style>
 </head>
 <body data-style="standard">
 <a class="skip" href="#lesson">Skip to the lesson</a>
 <header class="bar">
-  <p class="brand">Padi <span lang="ta">படி</span></p>
+  <p class="brand"><img src="{{ logo_uri }}" alt="" width="36" height="36"> Olivaasi <span lang="ta">ஒலிவாசி</span></p>
   {%- if app_nav %}
-  <nav aria-label="Padi">
+  <nav aria-label="Olivaasi">
     <a href="/">Convert another page</a>
     <a href="download">Download this page for offline use</a>
   </nav>
@@ -111,7 +112,7 @@
     {%- endif %}
     <details>
       <summary>About this page</summary>
-      <p>Made by Padi {{ version }} on {{ made_on }}, entirely on this computer, with no internet connection needed.</p>
+      <p>Made by Olivaasi {{ version }} on {{ made_on }}, entirely on this computer, with no internet connection needed.</p>
       <p>Text recognition: Tesseract, language setting {{ langs_label }}. Average word confidence {{ "%.0f"|format(confidence) }} out of 100.{% if voice_note %} Speech: {{ voice_note }}.{% endif %}</p>
       {%- if notes %}
       <ul>{% for n in notes %}<li>{{ n }}</li>{% endfor %}</ul>

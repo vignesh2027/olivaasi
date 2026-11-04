@@ -7,3 +7,4 @@ models/
 work/
 eval/out/
 .DS_Store
+out/

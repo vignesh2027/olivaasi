@@ -1,6 +1,6 @@
 """Take the screenshots in docs/screenshots (development tool).
 
-Needs a running server: uv run padi serve
+Needs a running server: uv run olivaasi serve
     uv run python scripts/screenshots.py [--base http://127.0.0.1:8765]
 """
 

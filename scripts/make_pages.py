@@ -27,7 +27,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PAGES = ROOT / "eval" / "pages"
 IMAGES = ROOT / "eval" / "images"
 CHROME = os.environ.get(
-    "PADI_CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    "OLIVAASI_CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 )
 WIDTH, HEIGHT = 1240, 1754  # A4 at 150 dpi
 
@@ -141,7 +141,7 @@ def hard_photo(scan: np.ndarray, seed: int) -> np.ndarray:
 
 def main() -> int:
     IMAGES.mkdir(parents=True, exist_ok=True)
-    profile = Path(tempfile.mkdtemp(prefix="padi-chrome-"))
+    profile = Path(tempfile.mkdtemp(prefix="olivaasi-chrome-"))
     for i, path in enumerate(sorted(PAGES.glob("*.json"))):
         spec = json.loads(path.read_text(encoding="utf-8"))
         scan_png = IMAGES / f"{spec['id']}_scan.png"

@@ -2,7 +2,7 @@
   "id": "ta_water",
   "lang": "ta",
   "font": "InaiMathi",
-  "source": "Written for Padi by the project author in the style of a middle-school science lesson and released with the repository.",
+  "source": "Written for Olivaasi by the project author in the style of a middle-school science lesson and released with the repository.",
   "blocks": [
     {"type": "h1", "text": "அலகு 5 நீர்ச் சுழற்சி"},
     {"type": "p", "text": "பூமியில் உள்ள நீர் ஓர் இடத்தில் நிலையாக இருப்பதில்லை. கடல், ஆறு, ஏரி ஆகியவற்றில் உள்ள நீர் சூரிய வெப்பத்தால் ஆவியாகி மேலே செல்கிறது. இதற்கு ஆவியாதல் (Evaporation) என்று பெயர்."},

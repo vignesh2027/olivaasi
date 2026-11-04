@@ -1,11 +1,11 @@
-"""Measure Padi on the evaluation pages.
+"""Measure Olivaasi on the evaluation pages.
 
 For every page in eval/pages/*.json and both images of it (a clean scan and a
 simulated phone photo) this reports:
 
   * character error rate (CER) and word error rate (WER) of plain Tesseract
     (the baseline: the same engine and models with no clean-up or structure)
-    and of Padi, both against the typeset ground truth, in reading order;
+    and of Olivaasi, both against the typeset ground truth, in reading order;
   * structure recovered: headings (text and level), numbered questions,
     table cells, verse lines, and the block sequence;
   * time per stage, median of several runs, and the speech time per page.
@@ -31,7 +31,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from padi import config, ocr, pipeline, preprocess, structure, tts  # noqa: E402
+from olivaasi import config, ocr, pipeline, preprocess, structure, tts  # noqa: E402
 
 
 def norm(text: str) -> str:
@@ -168,8 +168,8 @@ def main() -> int:
                 "chars": len(norm(truth)),
                 "raw_cer": round(cer(truth, raw), 4),
                 "raw_wer": round(wer(truth, raw), 4),
-                "padi_cer": round(cer(truth, doc.plain_text()), 4),
-                "padi_wer": round(wer(truth, doc.plain_text()), 4),
+                "olivaasi_cer": round(cer(truth, doc.plain_text()), 4),
+                "olivaasi_wer": round(wer(truth, doc.plain_text()), 4),
                 "confidence": round(conf, 1),
                 "raw_seconds": round(raw_secs, 2),
                 "seconds": {k: round(v, 2) for k, v in stages.items()},
@@ -188,7 +188,7 @@ def main() -> int:
                         row["audio_length"] = round(timings[-1].end, 1) if timings else 0
                         row["voice"] = backend.name
             rows.append(row)
-            print(f"{spec['id']:13s} {variant:5s} raw CER {row['raw_cer']:.3f}  Padi CER {row['padi_cer']:.3f}  "
+            print(f"{spec['id']:13s} {variant:5s} raw CER {row['raw_cer']:.3f}  Olivaasi CER {row['olivaasi_cer']:.3f}  "
                   f"recognise {row['recognise_seconds']:.1f}s  audio {row.get('audio_seconds', '-')}s  {row['structure']['kinds_found']}")
     result = {"machine": machine(), "tesseract": tess, "tessdata": str(config.tessdata_dir() or "system"), "langs": args.langs, "runs": args.runs, "rows": rows}
     (ROOT / "eval" / "results.json").write_text(json.dumps(result, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -216,19 +216,19 @@ def to_markdown(r: dict) -> str:
         "CER is character error rate (edits per ground-truth character, in Unicode code points); WER is word error rate. "
         "Both compare the whole page in reading order, so text that is lost or put in the wrong order counts as error.",
         "",
-        "| Page | Image | Characters | Plain Tesseract CER | Padi CER | Plain Tesseract WER | Padi WER |",
+        "| Page | Image | Characters | Plain Tesseract CER | Olivaasi CER | Plain Tesseract WER | Olivaasi WER |",
         "|---|---|---:|---:|---:|---:|---:|",
     ]
     for x in r["rows"]:
-        lines.append(f"| {x['page']} | {x['variant']} | {x['chars']} | {x['raw_cer']:.1%} | {x['padi_cer']:.1%} | {x['raw_wer']:.1%} | {x['padi_wer']:.1%} |")
+        lines.append(f"| {x['page']} | {x['variant']} | {x['chars']} | {x['raw_cer']:.1%} | {x['olivaasi_cer']:.1%} | {x['raw_wer']:.1%} | {x['olivaasi_wer']:.1%} |")
     for lang, name in (("ta", "Tamil"), ("en", "English")):
         for v in ("scan", "photo", "hard"):
             sel = [x for x in r["rows"] if x["lang"] == lang and x["variant"] == v]
             if sel:
                 tot = sum(x["chars"] for x in sel)
                 raw = sum(x["raw_cer"] * x["chars"] for x in sel) / tot
-                padi = sum(x["padi_cer"] * x["chars"] for x in sel) / tot
-                lines.append(f"| **{name}, all {v}s** | {v} | {tot} | **{raw:.1%}** | **{padi:.1%}** | | |")
+                olivaasi = sum(x["olivaasi_cer"] * x["chars"] for x in sel) / tot
+                lines.append(f"| **{name}, all {v}s** | {v} | {tot} | **{raw:.1%}** | **{olivaasi:.1%}** | | |")
     lines += [
         "",
         "## Structure recovered",

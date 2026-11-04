@@ -1,6 +1,6 @@
-"""Run the axe-core accessibility checker on Padi's own pages (development tool).
+"""Run the axe-core accessibility checker on Olivaasi's own pages (development tool).
 
-Needs a running server (uv run padi serve) and axe.min.js, fetched by
+Needs a running server (uv run olivaasi serve) and axe.min.js, fetched by
 scripts/get_models.sh into models/vendor/. Checks the WCAG 2.0, 2.1 and 2.2
 A and AA rules that axe can test automatically, on:
 
@@ -88,7 +88,7 @@ def main() -> int:
             total += len(v)
             print(f"{name}: {len(v)} violation(s)")
             for item in v:
-                print(f"   [{item['impact']}] {item['id']}: {item['help']} -> {item['nodes']}")
+                print(f"   [{item['impact']}] {item['id']}: {item['help']}: {item['nodes']}")
     print(f"TOTAL {total}")
     return 1 if total else 0
 

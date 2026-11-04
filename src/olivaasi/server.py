@@ -25,7 +25,7 @@ SAMPLES = {
     "en_daffodils_photo": ("English poem lesson, phone photo", "en"),
 }
 
-app = FastAPI(title="Padi", docs_url=None, redoc_url=None, openapi_url=None)
+app = FastAPI(title="Olivaasi", docs_url=None, redoc_url=None, openapi_url=None)
 app.mount("/static", StaticFiles(directory=config.PACKAGE_DIR / "static"), name="static")
 templates = Jinja2Templates(directory=config.PACKAGE_DIR / "templates")
 
@@ -80,7 +80,7 @@ async def convert(request: Request, photo: UploadFile = File(None), lang: str = 
         return page(request, error="That photo is larger than 15 MB. Take it again at a lower resolution, or crop it.", status=413, lang=lang)
     ext = IMAGE_TYPES.get(photo.content_type or "")
     if ext is None:
-        return page(request, error="That file is not a photo Padi can read. Use a JPG or PNG image.", status=415, lang=lang)
+        return page(request, error="That file is not a photo Olivaasi can read. Use a JPG or PNG image.", status=415, lang=lang)
     doc_dir = config.work_dir() / secrets.token_hex(6)
     doc_dir.mkdir()
     src = doc_dir / f"input{ext}"
@@ -128,9 +128,9 @@ def doc_download(doc_id: str):
     with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
         for name in ("index.html", "audio.m4a", "audio.wav", "original.jpg", "text.txt"):
             if (d / name).exists():
-                z.write(d / name, f"padi-{doc_id}/{name}")
+                z.write(d / name, f"olivaasi-{doc_id}/{name}")
     buf.seek(0)
-    headers = {"Content-Disposition": f'attachment; filename="padi-{doc_id}.zip"'}
+    headers = {"Content-Disposition": f'attachment; filename="olivaasi-{doc_id}.zip"'}
     return StreamingResponse(buf, media_type="application/zip", headers=headers)
 
 

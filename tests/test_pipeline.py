@@ -5,7 +5,7 @@ import zipfile
 from fastapi.testclient import TestClient
 
 from conftest import needs_ocr
-from padi import pipeline
+from olivaasi import pipeline
 
 
 @needs_ocr
@@ -28,7 +28,7 @@ def test_convert_tamil_photo_to_accessible_page(work, sample_image):
 
 @needs_ocr
 def test_server_flow(work, sample_image):
-    from padi.server import app
+    from olivaasi.server import app
 
     c = TestClient(app)
     assert c.get("/").status_code == 200

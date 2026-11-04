@@ -1,5 +1,5 @@
-from padi.ocr import Line, Word, clean_text, group_words_into_lines, parse_tsv
-from padi.structure import build, detect_lang, lang_segments, split_sentences
+from olivaasi.ocr import Line, Word, clean_text, group_words_into_lines, parse_tsv
+from olivaasi.structure import build, detect_lang, lang_segments, split_sentences
 
 
 def line(text, top, left=100, height=30, block=1, par=1, stroke=3.0, width=None):

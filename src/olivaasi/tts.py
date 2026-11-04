@@ -134,7 +134,7 @@ def _mac_voices() -> dict[str, str]:
 
 
 def pick_backend() -> Backend | None:
-    if os.environ.get("PADI_TTS") == "none":
+    if os.environ.get("OLIVAASI_TTS") == "none":
         return None
     if shutil.which("say") and _mac_voices():
         return MacSay()
@@ -200,7 +200,7 @@ def build_track(clips: list[Clip], out_dir: Path, backend: Backend) -> tuple[Pat
     """Speak each clip, join them with short pauses, and return the track and per-clip timings."""
     out_dir.mkdir(parents=True, exist_ok=True)
     audio: list[np.ndarray] = []
-    with tempfile.TemporaryDirectory(prefix="padi-tts-") as tmp:
+    with tempfile.TemporaryDirectory(prefix="olivaasi-tts-") as tmp:
         i = 0
         while i < len(clips):  # consecutive clips in the same language share one voice call
             j = i

@@ -1,8 +1,8 @@
 #!/bin/sh
-# Download the offline files Padi needs, once, while you have internet.
+# Download the offline files Olivaasi needs, once, while you have internet.
 #   models/tessdata/tam.traineddata, eng.traineddata  Tesseract "best" models (Apache 2.0)
 #   models/vendor/axe.min.js                           axe-core 4.10.2 (MPL 2.0), only for scripts/a11y_check.py
-# After this, Padi runs with networking switched off.
+# After this, Olivaasi runs with networking switched off.
 set -eu
 cd "$(dirname "$0")/.."
 mkdir -p models/tessdata models/vendor

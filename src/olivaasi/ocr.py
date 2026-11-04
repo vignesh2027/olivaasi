@@ -91,7 +91,7 @@ def clean_text(text: str) -> str:
 
 
 def _write_png(img: np.ndarray) -> str:
-    fd, path = tempfile.mkstemp(suffix=".png", prefix="padi-")
+    fd, path = tempfile.mkstemp(suffix=".png", prefix="olivaasi-")
     os.close(fd)
     cv2.imwrite(path, img)
     return path

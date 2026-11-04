@@ -3,18 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{% if error %}Error: {% endif %}Padi: read any textbook page</title>
+<title>{% if error %}Error: {% endif %}Olivaasi: read any textbook page</title>
 <link rel="stylesheet" href="/static/app.css">
+<link rel="icon" href="/static/logo.svg" type="image/svg+xml">
 </head>
 <body>
 <a class="skip" href="#main">Skip to main content</a>
 <header class="bar">
-  <p class="brand">Padi <span lang="ta">படி</span></p>
+  <p class="brand"><img src="/static/logo.svg" alt="" width="36" height="36"> Olivaasi <span lang="ta">ஒலிவாசி</span></p>
   <p class="tag">Works offline. Photos stay on this computer.</p>
 </header>
 <main id="main" tabindex="-1">
   <h1>Turn a photo of a textbook page into a page you can read or hear</h1>
-  <p class="lead">Padi reads Tamil and English pages, keeps the headings, questions and tables, and makes a large-print page with audio that a screen reader can follow.</p>
+  <p class="lead">Olivaasi reads Tamil and English pages, keeps the headings, questions and tables, and makes a large-print page with audio that a screen reader can follow.</p>
   <p id="busy" class="busy" role="status" aria-live="polite"></p>
 
   {%- if error %}
@@ -52,7 +53,7 @@
   {%- if samples %}
   <section class="card" aria-labelledby="samples-h">
     <h2 id="samples-h">Try a sample page</h2>
-    <p>These pages were typeset for Padi from public-domain text and photographed in simulation. No real student data is used.</p>
+    <p>These pages were typeset for Olivaasi from public-domain text and photographed in simulation. No real student data is used.</p>
     <ul class="samples">
       {%- for s in samples %}
       <li>
@@ -80,7 +81,7 @@
 
 </main>
 <footer class="foot">
-  <p>Padi {{ version }}. Text recognition by Tesseract. Speech by the voices installed on this computer. Recognised text can contain mistakes.</p>
+  <p>Olivaasi {{ version }}. Text recognition by Tesseract. Speech by the voices installed on this computer. Recognised text can contain mistakes.</p>
 </footer>
 <script>
 document.querySelectorAll("form[data-busy]").forEach(function (f) {

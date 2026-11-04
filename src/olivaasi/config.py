@@ -13,10 +13,10 @@ REPO_DIR = PACKAGE_DIR.parent.parent
 def tessdata_dir() -> Path | None:
     """Folder holding tam.traineddata and eng.traineddata.
 
-    PADI_TESSDATA wins, then ./models/tessdata in the repository (filled by
+    OLIVAASI_TESSDATA wins, then ./models/tessdata in the repository (filled by
     scripts/get_models.sh), else None so Tesseract uses its built-in default.
     """
-    env = os.environ.get("PADI_TESSDATA")
+    env = os.environ.get("OLIVAASI_TESSDATA")
     if env:
         return Path(env)
     local = REPO_DIR / "models" / "tessdata"
@@ -26,7 +26,7 @@ def tessdata_dir() -> Path | None:
 
 
 def tesseract_bin() -> str:
-    found = os.environ.get("PADI_TESSERACT") or shutil.which("tesseract")
+    found = os.environ.get("OLIVAASI_TESSERACT") or shutil.which("tesseract")
     if not found:
         raise RuntimeError(
             "Tesseract is not installed. On macOS run: brew install tesseract. "
@@ -37,6 +37,6 @@ def tesseract_bin() -> str:
 
 def work_dir() -> Path:
     """Where the server keeps converted pages."""
-    d = Path(os.environ.get("PADI_WORK", REPO_DIR / "work"))
+    d = Path(os.environ.get("OLIVAASI_WORK", REPO_DIR / "work"))
     d.mkdir(parents=True, exist_ok=True)
     return d
