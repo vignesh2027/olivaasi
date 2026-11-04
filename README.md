@@ -8,11 +8,12 @@ It is built for students who are blind, have low vision or find dense print hard
 
 ## What it does
 
-1. Finds the page in the photo, straightens it and evens out the light.
+1. Finds the page in the photo, straightens it, evens out the light, and straightens text lines that curve into a book's spine.
 2. Reads the text with Tesseract (Tamil and English models), including text that Tesseract's first pass skips.
 3. Rebuilds the structure: headings, paragraphs, verse, numbered questions and ruled tables.
 4. Writes one self-contained HTML page with real headings, lists and tables, a language tag on every block and every English phrase inside Tamil text, text size and reading style controls, and the original photo one click away.
-5. Records the page with the computer's offline voices and highlights each sentence as it is read; previous, repeat and next sentence buttons and three speeds.
+5. Records the page with the computer's offline voices and highlights each sentence as it is read, with Play, Previous, Repeat, Next and Next heading buttons and three speeds.
+6. Optionally adds a simplified version of English paragraphs from a local model, labelled, with the original one tap away. Tamil is not simplified (see [eval/simplification.md](eval/simplification.md)).
 
 The output folder can be copied to a pen drive and opened in any browser.
 
@@ -41,7 +42,19 @@ Start the app and open http://127.0.0.1:8765/ in a browser:
 uv run olivaasi serve
 ```
 
-Choose a photo, or press one of the sample buttons. Converted pages are kept in `work/` and listed on the home page.
+Choose a photo, or press one of the sample buttons. Converted pages are kept in `work/` and listed on the home page. Each page can be downloaded as a zip and opened from a pen drive on any computer.
+
+### Optional: simplified English paragraphs
+
+This needs [Ollama](https://ollama.com) and the `gemma3:4b` model (about 3.4 GB, downloaded once):
+
+```sh
+brew install ollama
+ollama serve &
+ollama pull gemma3:4b
+```
+
+With Ollama running, the home page offers "Also make a simplified version of English paragraphs". Without it, the option is shown as unavailable and everything else works.
 
 Or convert one photo from the command line:
 
@@ -57,20 +70,24 @@ uv run pytest
 uv run python eval/run_eval.py
 ```
 
-The evaluation writes `eval/results.md`. The accessibility check and the screenshots need the app running in another terminal and Google Chrome installed:
+The evaluation writes `eval/results.md`. The accessibility check, the keyboard walkthrough and the screenshots need the app running in another terminal and Google Chrome installed:
 
 ```sh
 uv run python scripts/a11y_check.py
+uv run python scripts/keyboard_walk.py
 uv run python scripts/screenshots.py
 ```
 
+To regenerate the evaluation images (also needs Chrome): `uv run python scripts/make_pages.py`.
+
 ## Limitations
 
-* Tested on typeset pages and simulated photos, not yet on real textbook photos (see EVALUATION.md for why).
+* Tested on typeset pages and simulated photos and camera captures, not on real textbook pages (see EVALUATION.md for why).
 * One text column. Two-column pages are read across both columns.
 * Pictures, diagrams and handwriting are not described. Mathematical notation is read as plain text.
-* On poor photos, bold subheadings can be missed and become ordinary paragraphs.
-* Speech quality depends on the voices installed on the computer.
+* On the harshest photos some coloured headings and question numbers are not recognised as such; the text stays in order.
+* Speech quality depends on the voices installed on the computer. The Linux and Windows path (eSpeak NG) is untested.
+* Not yet tested with blind or low-vision students, or by a person using a screen reader.
 
 ## Credits
 
@@ -79,5 +96,6 @@ Built during AccessED Hacks (17 October to 20 November 2026); all project code i
 * [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) and the [tessdata_best](https://github.com/tesseract-ocr/tessdata_best) Tamil and English models, Apache 2.0.
 * [OpenCV](https://opencv.org), Apache 2.0. [NumPy](https://numpy.org), BSD. [FastAPI](https://fastapi.tiangolo.com), [Starlette](https://www.starlette.io) and [Uvicorn](https://www.uvicorn.org), BSD and MIT. [Jinja](https://jinja.palletsprojects.com), BSD.
 * Speech: the macOS system voices, or [eSpeak NG](https://github.com/espeak-ng/espeak-ng) (GPL 3.0, run as a separate program).
+* Optional simplification: [Gemma 3 4B](https://ai.google.dev/gemma) (Gemma terms of use) through [Ollama](https://ollama.com) (MIT).
 * Development only: [axe-core](https://github.com/dequelabs/axe-core) 4.10.2 (MPL 2.0) for accessibility checks, Google Chrome for screenshots, pytest.
 * Evaluation text: Thirukkural (public domain) and William Wordsworth, "I Wandered Lonely as a Cloud" (1807, public domain). All other sample text and the logo were made for this project.
