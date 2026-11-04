@@ -1,0 +1,16 @@
+[project]
+name = "padi"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "vigneshwar", email = "applemacbook6sep2004@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+padi = "padi:main"
+
+[build-system]
+requires = ["uv_build>=0.11.14,<0.12.0"]
+build-backend = "uv_build"
