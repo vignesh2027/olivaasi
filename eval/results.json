@@ -1,0 +1,489 @@
+{
+ "machine": "Apple M1, 8 GB RAM, macOS 26.6.2",
+ "tesseract": "tesseract 5.5.4",
+ "tessdata": "/Users/vignesh/padi/models/tessdata",
+ "langs": "tam+eng",
+ "runs": 3,
+ "rows": [
+  {
+   "page": "en_daffodils",
+   "lang": "en",
+   "variant": "scan",
+   "chars": 677,
+   "raw_cer": 0.0059,
+   "raw_wer": 0.0242,
+   "padi_cer": 0.0,
+   "padi_wer": 0.0,
+   "confidence": 96.1,
+   "raw_seconds": 2.3,
+   "seconds": {
+    "clean_up": 0.06,
+    "tables": 0.22,
+    "ocr": 0.86,
+    "structure": 0.0
+   },
+   "recognise_seconds": 1.14,
+   "structure": {
+    "headings": [
+     3,
+     3
+    ],
+    "questions": [
+     4,
+     4
+    ],
+    "table_cells": [
+     8,
+     8
+    ],
+    "verse_lines": [
+     6,
+     6
+    ],
+    "block_sequence": 1.0,
+    "kinds_truth": [
+     "h1",
+     "paragraph",
+     "verse",
+     "h2",
+     "table",
+     "h2",
+     "list"
+    ],
+    "kinds_found": [
+     "h1",
+     "paragraph",
+     "verse",
+     "h2",
+     "table",
+     "h2",
+     "list"
+    ]
+   },
+   "sentences": 19
+  },
+  {
+   "page": "en_daffodils",
+   "lang": "en",
+   "variant": "photo",
+   "chars": 677,
+   "raw_cer": 0.003,
+   "raw_wer": 0.0081,
+   "padi_cer": 0.0,
+   "padi_wer": 0.0,
+   "confidence": 96.2,
+   "raw_seconds": 1.13,
+   "seconds": {
+    "clean_up": 0.07,
+    "tables": 0.29,
+    "ocr": 1.13,
+    "structure": 0.0
+   },
+   "recognise_seconds": 1.49,
+   "structure": {
+    "headings": [
+     3,
+     3
+    ],
+    "questions": [
+     4,
+     4
+    ],
+    "table_cells": [
+     8,
+     8
+    ],
+    "verse_lines": [
+     6,
+     6
+    ],
+    "block_sequence": 1.0,
+    "kinds_truth": [
+     "h1",
+     "paragraph",
+     "verse",
+     "h2",
+     "table",
+     "h2",
+     "list"
+    ],
+    "kinds_found": [
+     "h1",
+     "paragraph",
+     "verse",
+     "h2",
+     "table",
+     "h2",
+     "list"
+    ]
+   },
+   "sentences": 19,
+   "audio_seconds": 1.72,
+   "audio_length": 57.7,
+   "voice": "macOS say"
+  },
+  {
+   "page": "en_water",
+   "lang": "en",
+   "variant": "scan",
+   "chars": 709,
+   "raw_cer": 0.0042,
+   "raw_wer": 0.0159,
+   "padi_cer": 0.0,
+   "padi_wer": 0.0,
+   "confidence": 96.4,
+   "raw_seconds": 0.99,
+   "seconds": {
+    "clean_up": 0.07,
+    "tables": 0.38,
+    "ocr": 0.99,
+    "structure": 0.0
+   },
+   "recognise_seconds": 1.43,
+   "structure": {
+    "headings": [
+     3,
+     3
+    ],
+    "questions": [
+     4,
+     4
+    ],
+    "table_cells": [
+     8,
+     8
+    ],
+    "verse_lines": [
+     0,
+     0
+    ],
+    "block_sequence": 1.0,
+    "kinds_truth": [
+     "h1",
+     "paragraph",
+     "h2",
+     "paragraph",
+     "table",
+     "h2",
+     "list"
+    ],
+    "kinds_found": [
+     "h1",
+     "paragraph",
+     "h2",
+     "paragraph",
+     "table",
+     "h2",
+     "list"
+    ]
+   },
+   "sentences": 18
+  },
+  {
+   "page": "en_water",
+   "lang": "en",
+   "variant": "photo",
+   "chars": 709,
+   "raw_cer": 0.0056,
+   "raw_wer": 0.0159,
+   "padi_cer": 0.0,
+   "padi_wer": 0.0,
+   "confidence": 96.5,
+   "raw_seconds": 1.01,
+   "seconds": {
+    "clean_up": 0.07,
+    "tables": 0.35,
+    "ocr": 1.01,
+    "structure": 0.0
+   },
+   "recognise_seconds": 1.44,
+   "structure": {
+    "headings": [
+     3,
+     3
+    ],
+    "questions": [
+     4,
+     4
+    ],
+    "table_cells": [
+     8,
+     8
+    ],
+    "verse_lines": [
+     0,
+     0
+    ],
+    "block_sequence": 1.0,
+    "kinds_truth": [
+     "h1",
+     "paragraph",
+     "h2",
+     "paragraph",
+     "table",
+     "h2",
+     "list"
+    ],
+    "kinds_found": [
+     "h1",
+     "paragraph",
+     "h2",
+     "paragraph",
+     "table",
+     "h2",
+     "list"
+    ]
+   },
+   "sentences": 18,
+   "audio_seconds": 3.39,
+   "audio_length": 63.1,
+   "voice": "macOS say"
+  },
+  {
+   "page": "ta_kural",
+   "lang": "ta",
+   "variant": "scan",
+   "chars": 736,
+   "raw_cer": 0.0,
+   "raw_wer": 0.0,
+   "padi_cer": 0.0,
+   "padi_wer": 0.0,
+   "confidence": 95.7,
+   "raw_seconds": 0.77,
+   "seconds": {
+    "clean_up": 0.06,
+    "tables": 0.15,
+    "ocr": 0.63,
+    "structure": 0.0
+   },
+   "recognise_seconds": 0.84,
+   "structure": {
+    "headings": [
+     4,
+     4
+    ],
+    "questions": [
+     5,
+     5
+    ],
+    "table_cells": [
+     8,
+     8
+    ],
+    "verse_lines": [
+     6,
+     6
+    ],
+    "block_sequence": 1.0,
+    "kinds_truth": [
+     "h1",
+     "h2",
+     "paragraph",
+     "h2",
+     "verse",
+     "verse",
+     "verse",
+     "table",
+     "h2",
+     "list"
+    ],
+    "kinds_found": [
+     "h1",
+     "h2",
+     "paragraph",
+     "h2",
+     "verse",
+     "verse",
+     "verse",
+     "table",
+     "h2",
+     "list"
+    ]
+   },
+   "sentences": 22
+  },
+  {
+   "page": "ta_kural",
+   "lang": "ta",
+   "variant": "photo",
+   "chars": 736,
+   "raw_cer": 0.3288,
+   "raw_wer": 0.3478,
+   "padi_cer": 0.0,
+   "padi_wer": 0.0,
+   "confidence": 95.8,
+   "raw_seconds": 0.58,
+   "seconds": {
+    "clean_up": 0.06,
+    "tables": 0.15,
+    "ocr": 0.69,
+    "structure": 0.0
+   },
+   "recognise_seconds": 0.91,
+   "structure": {
+    "headings": [
+     4,
+     4
+    ],
+    "questions": [
+     5,
+     5
+    ],
+    "table_cells": [
+     8,
+     8
+    ],
+    "verse_lines": [
+     6,
+     6
+    ],
+    "block_sequence": 1.0,
+    "kinds_truth": [
+     "h1",
+     "h2",
+     "paragraph",
+     "h2",
+     "verse",
+     "verse",
+     "verse",
+     "table",
+     "h2",
+     "list"
+    ],
+    "kinds_found": [
+     "h1",
+     "h2",
+     "paragraph",
+     "h2",
+     "verse",
+     "verse",
+     "verse",
+     "table",
+     "h2",
+     "list"
+    ]
+   },
+   "sentences": 22,
+   "audio_seconds": 1.95,
+   "audio_length": 67.8,
+   "voice": "macOS say"
+  },
+  {
+   "page": "ta_water",
+   "lang": "ta",
+   "variant": "scan",
+   "chars": 725,
+   "raw_cer": 0.0028,
+   "raw_wer": 0.0112,
+   "padi_cer": 0.0,
+   "padi_wer": 0.0,
+   "confidence": 95.4,
+   "raw_seconds": 1.18,
+   "seconds": {
+    "clean_up": 0.05,
+    "tables": 0.18,
+    "ocr": 0.82,
+    "structure": 0.0
+   },
+   "recognise_seconds": 1.05,
+   "structure": {
+    "headings": [
+     3,
+     3
+    ],
+    "questions": [
+     4,
+     4
+    ],
+    "table_cells": [
+     8,
+     8
+    ],
+    "verse_lines": [
+     0,
+     0
+    ],
+    "block_sequence": 1.0,
+    "kinds_truth": [
+     "h1",
+     "paragraph",
+     "h2",
+     "paragraph",
+     "table",
+     "h2",
+     "list"
+    ],
+    "kinds_found": [
+     "h1",
+     "paragraph",
+     "h2",
+     "paragraph",
+     "table",
+     "h2",
+     "list"
+    ]
+   },
+   "sentences": 18
+  },
+  {
+   "page": "ta_water",
+   "lang": "ta",
+   "variant": "photo",
+   "chars": 725,
+   "raw_cer": 0.5103,
+   "raw_wer": 0.5056,
+   "padi_cer": 0.0014,
+   "padi_wer": 0.0112,
+   "confidence": 95.7,
+   "raw_seconds": 0.45,
+   "seconds": {
+    "clean_up": 0.06,
+    "tables": 0.18,
+    "ocr": 0.83,
+    "structure": 0.0
+   },
+   "recognise_seconds": 1.06,
+   "structure": {
+    "headings": [
+     3,
+     3
+    ],
+    "questions": [
+     4,
+     4
+    ],
+    "table_cells": [
+     7,
+     8
+    ],
+    "verse_lines": [
+     0,
+     0
+    ],
+    "block_sequence": 1.0,
+    "kinds_truth": [
+     "h1",
+     "paragraph",
+     "h2",
+     "paragraph",
+     "table",
+     "h2",
+     "list"
+    ],
+    "kinds_found": [
+     "h1",
+     "paragraph",
+     "h2",
+     "paragraph",
+     "table",
+     "h2",
+     "list"
+    ]
+   },
+   "sentences": 18,
+   "audio_seconds": 1.68,
+   "audio_length": 63.4,
+   "voice": "macOS say"
+  }
+ ]
+}

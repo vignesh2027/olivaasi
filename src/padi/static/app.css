@@ -1,0 +1,55 @@
+:root {
+  --bg: #F4F9FF;
+  --surface: #FFFFFF;
+  --text: #0B1B33;
+  --muted: #33475F;
+  --primary: #2563EB;
+  --primary-dark: #1D4ED8;
+  --accent: #4C1D95;
+  --danger: #9F1239;
+  --line: #B9CBE4;
+  --focus: #4C1D95;
+  --tamil: "Noto Sans Tamil", "Tamil Sangam MN", "InaiMathi", "Latha", "Nirmala UI", sans-serif;
+  --latin: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--latin); font-size: 1.125rem; line-height: 1.6; }
+[lang="ta"] { font-family: var(--tamil); }
+a { color: var(--primary-dark); text-underline-offset: .15em; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.skip { position: absolute; left: 1rem; top: -4rem; background: var(--surface); color: var(--text); padding: .5rem 1rem; border: 2px solid var(--focus); z-index: 10; }
+.skip:focus { top: 1rem; }
+.bar { display: flex; flex-wrap: wrap; gap: .25rem 1.5rem; align-items: center; justify-content: space-between; padding: .75rem 1rem; background: var(--surface); border-bottom: 1px solid var(--line); }
+.brand { margin: 0; font-weight: 700; font-size: 1.35rem; color: var(--accent); }
+.tag { margin: 0; color: var(--muted); font-size: 1rem; }
+main { max-width: 46rem; margin: 0 auto; padding: 1.5rem 1rem 2rem; }
+h1 { font-size: 1.9rem; line-height: 1.25; margin: .5rem 0 .75rem; color: var(--text); }
+h2 { font-size: 1.35rem; margin: 0 0 .75rem; color: var(--accent); }
+.lead { font-size: 1.15rem; color: var(--muted); margin: 0 0 1.5rem; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 1.25rem; margin: 0 0 1.25rem; box-shadow: 0 1px 2px rgba(11, 27, 51, .06), 0 6px 20px rgba(37, 99, 235, .06); }
+.field { margin: 0 0 1.1rem; }
+.field label { display: block; font-weight: 600; margin-bottom: .25rem; }
+.hint { margin: 0 0 .4rem; color: var(--muted); font-size: 1rem; }
+.check { display: flex; gap: .6rem; align-items: flex-start; }
+.check label { font-weight: 400; margin: 0; }
+input[type="checkbox"] { width: 24px; height: 24px; margin-top: .15rem; accent-color: var(--primary); flex: none; }
+input[type="file"] { font: inherit; font-size: 1rem; max-width: 100%; padding: .5rem; border: 2px dashed var(--line); border-radius: 10px; width: 100%; background: var(--bg); }
+input[aria-invalid="true"] { border-color: var(--danger); border-style: solid; }
+select { font: inherit; font-size: 1rem; min-height: 44px; padding: .35rem .75rem; border: 2px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--text); }
+button { font: inherit; font-size: 1.05rem; font-weight: 600; min-height: 48px; padding: .5rem 1.25rem; border-radius: 10px; border: 2px solid var(--primary); background: var(--primary); color: #FFFFFF; cursor: pointer; }
+button:hover { background: var(--primary-dark); border-color: var(--primary-dark); }
+button.secondary { background: var(--surface); color: var(--primary-dark); text-align: left; }
+button.secondary:hover { background: var(--bg); }
+button[aria-disabled="true"] { opacity: .8; cursor: progress; }
+.samples, .recent { list-style: none; margin: 0; padding: 0; }
+.samples li { margin: 0 0 .6rem; }
+.samples button { width: 100%; }
+.recent li { padding: .45rem 0; border-bottom: 1px solid var(--line); }
+.recent li:last-child { border-bottom: 0; }
+.meta { color: var(--muted); font-size: .95rem; }
+.error { border: 2px solid var(--danger); border-left-width: 8px; background: #FFF1F3; color: var(--text); border-radius: 10px; padding: .75rem 1rem; margin: 0 0 1.25rem; }
+.error h2 { color: var(--danger); margin: 0 0 .25rem; font-size: 1.15rem; }
+.error p { margin: 0; }
+.busy { font-weight: 600; color: var(--accent); min-height: 1.5em; }
+.foot { max-width: 46rem; margin: 0 auto; padding: 0 1rem 2rem; color: var(--muted); font-size: .95rem; }
+@media (max-width: 30rem) { h1 { font-size: 1.5rem; } .card { padding: 1rem; } }

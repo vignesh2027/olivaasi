@@ -1,0 +1,20 @@
+{
+  "id": "en_water",
+  "lang": "en",
+  "font": "Georgia",
+  "source": "Written for Padi by the project author in the style of a middle-school science lesson and released with the repository.",
+  "blocks": [
+    {"type": "h1", "text": "Unit 5 The Water Cycle"},
+    {"type": "p", "text": "Water on the Earth does not stay in one place. The heat of the Sun turns water in seas, rivers and lakes into vapour, which rises into the air. This is called evaporation."},
+    {"type": "h2", "text": "How clouds form"},
+    {"type": "p", "text": "As the vapour rises, it cools and turns into tiny droplets of water. This is called condensation. Millions of droplets gather to form clouds. When the droplets become heavy, they fall to the ground as rain."},
+    {"type": "table", "rows": [["Stage", "What happens"], ["Evaporation", "Water turns into vapour"], ["Condensation", "Vapour turns into droplets"], ["Precipitation", "Water falls back to the Earth"]]},
+    {"type": "h2", "text": "Think and answer"},
+    {"type": "ol", "items": [
+      "What is evaporation?",
+      "How are clouds formed?",
+      "Put the three stages of the water cycle in order.",
+      "Why should we save rainwater?"
+    ]}
+  ]
+}

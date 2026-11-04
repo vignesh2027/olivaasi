@@ -1,0 +1,124 @@
+{%- macro say(s) -%}
+<span class="s"{% if s.id in timings %} data-start="{{ timings[s.id].start }}" data-end="{{ timings[s.id].end }}"{% endif %}{% if s.lang != block_lang %} lang="{{ s.lang }}"{% endif %}>
+{%- for text, lang in s.segments() -%}
+{%- if lang %}<span lang="{{ lang }}">{{ text }}</span>{% else %}{{ text }}{% endif -%}
+{%- endfor -%}
+</span>
+{%- endmacro -%}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="Padi {{ version }}">
+<title>{{ doc.title }} | Padi</title>
+<style>{{ css | safe }}</style>
+</head>
+<body data-style="standard">
+<a class="skip" href="#lesson">Skip to the lesson</a>
+<header class="bar">
+  <p class="brand">Padi <span lang="ta">படி</span></p>
+  {%- if app_nav %}
+  <nav aria-label="Padi">
+    <a href="/">Convert another page</a>
+    <a href="download">Download this page for offline use</a>
+  </nav>
+  {%- endif %}
+</header>
+<section class="controls" aria-label="Reading and listening settings">
+  <div>
+    <label for="size">Text size</label>
+    <select id="size">
+      {%- for v in [100, 125, 150, 200, 250, 300] %}
+      <option value="{{ v }}"{% if v == 100 %} selected{% endif %}>{{ v }}%</option>
+      {%- endfor %}
+    </select>
+  </div>
+  <fieldset>
+    <legend>Reading style</legend>
+    <label><input type="radio" name="style" value="standard" checked> Standard</label>
+    <label><input type="radio" name="style" value="dyslexia"> Wide spacing</label>
+    <label><input type="radio" name="style" value="dark"> Dark, high contrast</label>
+  </fieldset>
+  {%- if audio_file %}
+  <div>
+    <span id="audio-label" class="visually-hidden">Listen to this page</span>
+    <div class="audio" role="group" aria-labelledby="audio-label">
+      <audio id="player" controls preload="metadata" src="{{ audio_file }}" aria-label="Audio of this page"></audio>
+      <button type="button" id="prev" class="secondary">Previous sentence</button>
+      <button type="button" id="again" class="secondary">Repeat sentence</button>
+      <button type="button" id="next" class="secondary">Next sentence</button>
+      <label class="visually-hidden" for="speed">Speed</label>
+      <select id="speed" aria-label="Speed">
+        <option value="0.75">Slow</option>
+        <option value="1" selected>Normal speed</option>
+        <option value="1.25">Fast</option>
+      </select>
+    </div>
+    <p id="where" class="visually-hidden" role="status"></p>
+  </div>
+  {%- endif %}
+</section>
+<main id="lesson" tabindex="-1">
+  <p class="notice">This text was read from a photo by a computer and may have mistakes. Check important words against the printed page.</p>
+  <article lang="{{ doc.lang }}">
+    {%- if not has_h1 %}
+    <h1 lang="en">Converted page</h1>
+    {%- endif %}
+    {%- for b in doc.blocks %}
+    {%- set block_lang = b.lang %}
+    {%- if b.kind == "heading" %}
+    <h{{ b.level }} lang="{{ b.lang }}">{% for s in b.sentences %}{{ say(s) }}{% endfor %}</h{{ b.level }}>
+    {%- elif b.kind == "paragraph" %}
+    <p lang="{{ b.lang }}">{% for s in b.sentences %}{{ say(s) }}{% if not loop.last %} {% endif %}{% endfor %}</p>
+    {%- elif b.kind == "verse" %}
+    <p class="verse" lang="{{ b.lang }}">{% for s in b.sentences %}{{ say(s) }}{% if not loop.last %}<br>{% endif %}{% endfor %}</p>
+    {%- elif b.kind == "list" %}
+    <ol class="questions" lang="{{ b.lang }}">
+      {%- for it in b.items %}
+      <li><span class="label">{{ it.label }}.</span> {% for s in it.sentences %}{{ say(s) }}{% if not loop.last %} {% endif %}{% endfor %}</li>
+      {%- endfor %}
+    </ol>
+    {%- elif b.kind == "table" %}
+    <div class="table-wrap" role="region" aria-label="Table" tabindex="0">
+    <table lang="{{ b.lang }}">
+      {%- for row in b.rows %}
+      {%- set rs = b.row_sentences[loop.index0] if loop.index0 < b.row_sentences|length else none %}
+      {%- set is_head = b.rows|length > 1 and loop.first %}
+      <tr{% if rs and rs.id in timings %} data-start="{{ timings[rs.id].start }}"{% endif %}>
+        {%- for cell in row %}
+        {%- if is_head %}
+        <th scope="col">{{ cell }}</th>
+        {%- else %}
+        <td>{{ cell }}</td>
+        {%- endif %}
+        {%- endfor %}
+      </tr>
+      {%- endfor %}
+    </table>
+    </div>
+    {%- elif b.kind == "pagenum" %}
+    <p class="pagenum"><span lang="en">Page</span> {{ say(b.sentences[0]) }}</p>
+    {%- endif %}
+    {%- endfor %}
+  </article>
+  <div class="extra">
+    {%- if original_file %}
+    <details>
+      <summary>Show the original photo</summary>
+      <img src="{{ original_file }}" alt="Photo of the printed page that this text was read from">
+    </details>
+    {%- endif %}
+    <details>
+      <summary>About this page</summary>
+      <p>Made by Padi {{ version }} on {{ made_on }}, entirely on this computer, with no internet connection needed.</p>
+      <p>Text recognition: Tesseract, language setting {{ langs_label }}. Average word confidence {{ "%.0f"|format(confidence) }} out of 100.{% if voice_note %} Speech: {{ voice_note }}.{% endif %}</p>
+      {%- if notes %}
+      <ul>{% for n in notes %}<li>{{ n }}</li>{% endfor %}</ul>
+      {%- endif %}
+    </details>
+  </div>
+</main>
+<script>{{ js | safe }}</script>
+</body>
+</html>

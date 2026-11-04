@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if error %}Error: {% endif %}Padi: read any textbook page</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header class="bar">
+  <p class="brand">Padi <span lang="ta">படி</span></p>
+  <p class="tag">Works offline. Photos stay on this computer.</p>
+</header>
+<main id="main" tabindex="-1">
+  <h1>Turn a photo of a textbook page into a page you can read or hear</h1>
+  <p class="lead">Padi reads Tamil and English pages, keeps the headings, questions and tables, and makes a large-print page with audio that a screen reader can follow.</p>
+  <p id="busy" class="busy" role="status" aria-live="polite"></p>
+
+  {%- if error %}
+  <div class="error" role="alert" id="error">
+    <h2>The page was not converted</h2>
+    <p>{{ error }}</p>
+  </div>
+  {%- endif %}
+
+  <section class="card" aria-labelledby="convert-h">
+    <h2 id="convert-h">Convert a page</h2>
+    <form method="post" action="/convert" enctype="multipart/form-data" data-busy>
+      <div class="field">
+        <label for="photo">Photo of the page</label>
+        <p class="hint" id="photo-hint">JPG or PNG, up to 15 MB. Hold the phone straight above the page, in good light, with the whole page in the frame.</p>
+        <input type="file" id="photo" name="photo" accept="image/jpeg,image/png,image/webp" required
+               aria-describedby="photo-hint{% if error %} error{% endif %}"{% if error %} aria-invalid="true"{% endif %}>
+      </div>
+      <div class="field">
+        <label for="lang">Language on the page</label>
+        <select id="lang" name="lang">
+          {%- for value, label in langs.items() %}
+          <option value="{{ value }}"{% if value == lang %} selected{% endif %}>{{ label }}</option>
+          {%- endfor %}
+        </select>
+      </div>
+      <div class="field check">
+        <input type="checkbox" id="audio" name="audio" value="1" checked>
+        <label for="audio">Make an audio track that highlights each sentence as it is read</label>
+      </div>
+      <button type="submit">Convert page</button>
+    </form>
+  </section>
+
+  {%- if samples %}
+  <section class="card" aria-labelledby="samples-h">
+    <h2 id="samples-h">Try a sample page</h2>
+    <p>These pages were typeset for Padi from public-domain text and photographed in simulation. No real student data is used.</p>
+    <ul class="samples">
+      {%- for s in samples %}
+      <li>
+        <form method="post" action="/sample" data-busy>
+          <input type="hidden" name="key" value="{{ s.key }}">
+          <input type="hidden" name="audio" value="1">
+          <button type="submit" class="secondary">Convert sample: {{ s.label }}</button>
+        </form>
+      </li>
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif %}
+
+  {%- if recent %}
+  <section class="card" aria-labelledby="recent-h">
+    <h2 id="recent-h">Pages on this computer</h2>
+    <ul class="recent">
+      {%- for r in recent %}
+      <li><a href="/doc/{{ r.id }}/" lang="{{ r.lang }}">{{ r.title }}</a> <span class="meta">made {{ r.made.replace("T", " at ") }}</span></li>
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif %}
+
+</main>
+<footer class="foot">
+  <p>Padi {{ version }}. Text recognition by Tesseract. Speech by the voices installed on this computer. Recognised text can contain mistakes.</p>
+</footer>
+<script>
+document.querySelectorAll("form[data-busy]").forEach(function (f) {
+  f.addEventListener("submit", function () {
+    document.getElementById("busy").textContent = "Converting the page. This usually takes 5 to 20 seconds. The new page will open when it is ready.";
+    f.querySelector("button[type=submit]").setAttribute("aria-disabled", "true");
+  });
+});
+</script>
+</body>
+</html>
