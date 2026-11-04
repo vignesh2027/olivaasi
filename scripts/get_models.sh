@@ -9,13 +9,13 @@ mkdir -p models/tessdata models/vendor
 for lang in tam eng; do
   if [ ! -s "models/tessdata/$lang.traineddata" ]; then
     echo "Downloading $lang.traineddata"
-    curl -fL --retry 3 -o "models/tessdata/$lang.traineddata" \
+    curl -fsSL --retry 3 -o "models/tessdata/$lang.traineddata" \
       "https://github.com/tesseract-ocr/tessdata_best/raw/main/$lang.traineddata"
   fi
 done
 if [ ! -s models/vendor/axe.min.js ]; then
   echo "Downloading axe.min.js (accessibility checker, development only)"
-  curl -fL --retry 3 -o models/vendor/axe.min.js \
+  curl -fsSL --retry 3 -o models/vendor/axe.min.js \
     "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js"
 fi
 echo "Models ready in models/"
