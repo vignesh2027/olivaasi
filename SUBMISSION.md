@@ -90,22 +90,21 @@ All of Olivaasi's code, documents, evaluation pages, evaluation images and the l
 | docs/screenshots/05-page-phone-width.png | The lesson on a phone-sized screen with the settings folded away and the audio buttons at the top. |
 | docs/screenshots/06-page-english-simplified.png | An English lesson showing paragraphs labelled "Simplified by computer", with a switch back to the original. |
 
-## Demo video script (2 minutes 30 seconds)
+## Demo video script (2 minutes 41 seconds)
 
-Also the caption transcript. Use the made-up learner only. Screen recording of the laptop, with the audio of the app audible where noted.
+Recorded on the hosted demo on 8 November 2026. This is also the caption transcript (the same text is burned into the video and supplied as an .srt). Use the made-up learner only.
 
 | Time | On screen | Narration |
 |---|---|---|
-| 0:00 | A printed Tamil lesson page on a desk, then the same page as a photo. | This is a Tamil science lesson. For Kayal, a Class 10 student with low vision, and for blind classmates, a printed page like this is the barrier. A screen reader cannot read a photo, and accessible copies of worksheets and new editions are rarely on the school laptop. |
-| 0:20 | Plain Tesseract output of the photo in a text editor, first paragraph missing, table scrambled. | Ordinary text recognition on this photo loses the whole first paragraph and mixes up the table. Half the page is wrong, and nothing tells the student. |
-| 0:35 | Olivaasi home page. Wi-Fi turned off in the menu bar. | This is Olivaasi, running on a laptop with Wi-Fi switched off. I choose the photo and press Convert page. |
-| 0:45 | The converted page appears. | About four seconds later the page is back, with its title as a heading, both paragraphs, the table with column headers, and the four questions as a numbered list. |
-| 0:58 | Press Play. The sentence highlight moves; Tamil speech audible. | Press Play and the laptop's own Tamil voice reads the lesson, highlighting each sentence. |
-| 1:10 | Press Next heading, then Next twice; question 3 highlighted and read. | With only the keyboard, Next heading jumps to the questions and Next steps to question 3. |
-| 1:22 | Text size to 300 percent, then Wide spacing, then Dark high contrast. | Kayal can make the text three times larger, add spacing between letters and lines, or switch to dark, high contrast. |
-| 1:35 | Open "Show the original photo". | The original photo is always one click away, so a teacher can check any word. |
-| 1:42 | Convert the open-book sample; the curved page is straightened. | It also handles a page photographed in an open book, curving into the spine, by straightening the lines. |
-| 1:55 | English sample with Simplified by computer selected. | For English pages there is an optional simplified version, clearly labelled, with the original one tap away. We switched it off for Tamil because the small offline model changed facts. |
-| 2:08 | EVALUATION.md table. | We measured every change against plain Tesseract. On our simulated phone photos of Tamil pages, characters wrong fell from 30 percent to under 1 percent. |
-| 2:18 | README credits and limitations. | Everything here was built during AccessED Hacks on open-source tools. It has not yet been tested on real textbook pages or with students, and that is our next step. |
-| 2:28 | Logo. | Olivaasi. Read any page, aloud, offline. |
+| 0:00 | Title card: Olivaasi logo, "Read any page, aloud." | For Kayal, a made-up Class 10 student with low vision, and for her blind classmates, a printed textbook page is a wall. |
+| 0:05 | Before card: the Tamil water-cycle photo beside plain Tesseract's output, "51% of characters wrong or missing". | Here is a Tamil science lesson, photographed on a desk. A screen reader can't read a photo. Plain Tesseract text recognition loses the first paragraph, a subheading and most of the second, and nothing tells the student. 51 percent of the characters are wrong or missing. |
+| 0:24 | Hosted demo home page, header "Public demo. Photos are processed in memory and deleted once the page is sent." | This is Olivaasi's public demo. Photos are processed in memory and never stored. |
+| 0:30 | Press "Convert sample: Tamil science lesson, phone photo" (sped up 2x, labelled; the conversion took 12 seconds). | I convert that same photo from the sample pages. |
+| 0:36 | The converted page: heading, both paragraphs, the table, the four numbered questions. | 12 seconds later the page is back, with its title as a heading, both paragraphs, the table with column headers, and the 4 questions as a numbered list. |
+| 0:53 | Press Play. The sentence highlight moves and the demo's eSpeak NG Tamil voice is heard (labelled as robotic, with Vani named as the Mac voice). | Press Play, and each sentence is highlighted as it's read. |
+| 1:08 | Keyboard only: Tab to Next heading, Enter twice, Shift+Tab to Next, Enter until question 3 is read. | With the keyboard alone, Next heading jumps to the questions, and Next steps to question 3. |
+| 1:23 | Text size 300%, Wide spacing, then Dark, high contrast (sped up 1.5x, labelled). | Kayal can make the text three times larger, add wide spacing, or switch to dark, high contrast. |
+| 1:37 | Show the original photo. | The original photo is always one click away, so a teacher can check any word. |
+| 1:48 | Convert the open-book Thirukkural sample (sped up 3x, labelled; the conversion took 17 seconds). The curved photo, then About this page: "Straightened curved text lines (up to 18 pixels)." | It also reads a Thirukkural lesson photographed in an open book, curving into the spine. Olivaasi straightens the curved lines, keeps whichever reading Tesseract is more confident in, and says what it did on the page. |
+| 2:16 | Evaluation card: Tamil phone photos 30.4% to 0.2%, Tamil open book 84.7% to 3.6%, English open book 65.2% to 1.6%. | We measured every change against plain Tesseract. On simulated phone photos of Tamil pages, characters wrong fell from 30.4 percent to 0.2. It hasn't been tested on real textbook pages or with students yet. That's our next step. |
+| 2:33 | Close card: logo, live URL, "Built solo for AccessED Hacks". | Olivaasi. Read any page, aloud. Installed on a laptop, it works fully offline. |
