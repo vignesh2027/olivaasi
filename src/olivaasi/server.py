@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import io
 import json
+import os
 import secrets
+import tempfile
 import zipfile
 from pathlib import Path
 
@@ -27,6 +29,11 @@ SAMPLES = {
     "en_daffodils_photo": ("English poem lesson, phone photo", "en"),
 }
 
+# Hosted demo mode: each photo is converted in a temporary folder (on the demo server that
+# folder is in RAM), the page comes back with its audio and photo embedded, and the folder
+# is deleted before the response is sent. No page is kept and nothing is logged.
+HOSTED = os.environ.get("OLIVAASI_HOSTED") == "1"
+
 app = FastAPI(title="Olivaasi", docs_url=None, redoc_url=None, openapi_url=None)
 app.mount("/static", StaticFiles(directory=config.PACKAGE_DIR / "static"), name="static")
 templates = Jinja2Templates(directory=config.PACKAGE_DIR / "templates")
@@ -41,6 +48,8 @@ def sample_path(key: str) -> Path | None:
 
 
 def recent(limit: int = 8) -> list[dict]:
+    if HOSTED:
+        return []
     out = []
     for d in config.work_dir().iterdir():
         meta = d / "doc.json"
@@ -57,7 +66,7 @@ def page(request: Request, *, error: str | None = None, status: int = 200, lang:
         request,
         "index.html",
         {"error": error, "langs": ocr.LANG_CHOICES, "lang": lang, "samples": samples, "recent": recent(), "version": __version__,
-         "simplify_off": simplify.available(), "simplify_model": simplify.MODEL},
+         "simplify_off": simplify.available(), "simplify_model": simplify.MODEL, "hosted": HOSTED},
         status_code=status,
     )
 
@@ -70,6 +79,20 @@ def index(request: Request):
 async def _convert(src: Path, doc_dir: Path, lang: str, audio: bool, simplified: bool = False) -> RedirectResponse:
     await run_in_threadpool(pipeline.convert, src, doc_dir, lang, audio, simplified)
     return RedirectResponse(f"/doc/{doc_dir.name}/", status_code=303)
+
+
+def _convert_in_memory(data: bytes | None, src: Path | None, ext: str, lang: str, audio: bool) -> str:
+    with tempfile.TemporaryDirectory(prefix="olivaasi-") as tmp:
+        if data is not None:
+            src = Path(tmp) / f"input{ext}"
+            src.write_bytes(data)
+        result = pipeline.convert(src, Path(tmp) / "page", lang, audio, False, hosted=True)
+        return result.hosted_html or ""
+
+
+async def _hosted(data: bytes | None, src: Path | None, ext: str, lang: str, audio: bool) -> HTMLResponse:
+    html = await run_in_threadpool(_convert_in_memory, data, src, ext, lang, audio)
+    return HTMLResponse(html, headers={"Cache-Control": "no-store"})
 
 
 @app.post("/convert")
@@ -85,11 +108,13 @@ async def convert(request: Request, photo: UploadFile = File(None), lang: str = 
     ext = IMAGE_TYPES.get(photo.content_type or "")
     if ext is None:
         return page(request, error="That file is not a photo Olivaasi can read. Use a JPG or PNG image.", status=415, lang=lang)
-    doc_dir = config.work_dir() / secrets.token_hex(6)
-    doc_dir.mkdir()
-    src = doc_dir / f"input{ext}"
-    src.write_bytes(data)
     try:
+        if HOSTED:
+            return await _hosted(data, None, ext, lang, audio is not None)
+        doc_dir = config.work_dir() / secrets.token_hex(6)
+        doc_dir.mkdir()
+        src = doc_dir / f"input{ext}"
+        src.write_bytes(data)
         return await _convert(src, doc_dir, lang, audio is not None, simple is not None)
     except ValueError:
         return page(request, error="That file could not be opened as an image. Try another photo.", status=400, lang=lang)
@@ -101,11 +126,15 @@ async def sample(request: Request, key: str = Form(...), audio: str | None = For
     if src is None:
         return page(request, error="That sample page is missing.", status=404)
     lang = "tam+eng"
+    if HOSTED:
+        return await _hosted(None, src, src.suffix, lang, audio is not None)
     doc_dir = config.work_dir() / secrets.token_hex(6)
     return await _convert(src, doc_dir, lang, audio is not None, simple is not None)
 
 
 def _doc_dir(doc_id: str) -> Path:
+    if HOSTED:
+        raise HTTPException(404)
     if not (len(doc_id) == 12 and all(c in "0123456789abcdef" for c in doc_id)):
         raise HTTPException(404)
     d = config.work_dir() / doc_id

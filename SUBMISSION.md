@@ -1,6 +1,6 @@
 # Olivaasi: submission material for AccessED Hacks
 
-Text for the Devpost form, ready to paste. Figures come from EVALUATION.md and `eval/results.md`; check them again if the code changes. The AI-assistance credit line is added at submission time and is not part of this file.
+Text for the Devpost form, ready to paste. Figures come from EVALUATION.md and `eval/results.md`; check them again if the code changes. The AI-assistance credit line is added at submission time (placeholder at the end of Credits).
 
 ## Name
 
@@ -54,16 +54,17 @@ All of Olivaasi's code, documents, evaluation pages, evaluation images and the l
 
 ## Try it
 
-* Source code and full setup: the repository README. Setup on macOS takes a few commands; the app then runs at http://127.0.0.1:8765/ with no internet.
+* Try it live: https://applemacbook6sep2004--olivaasi.us-east.modal.run (press a sample button, or upload a photo; the first conversion after a quiet spell takes about 15 seconds). Photos are converted in memory and deleted before the page is sent; nothing is stored or logged. The demo runs on Linux, so its speech is the robotic eSpeak NG fallback rather than the macOS Tamil voice.
+* Source code: [GITHUB REPO LINK]. Setup on macOS takes a few commands; the app then runs at http://127.0.0.1:8765/ with no internet.
 * Sample pages are built in, so no photo and no personal information are needed to try it.
-* Recorded walkthrough: the demo video (script below; the script is also the transcript).
+* Recorded walkthrough: [YOUTUBE LINK] (script below; the script is also the transcript).
 
 ## Limitations
 
 * Tested on pages we typeset ourselves and on simulated photos and camera captures, not on real textbook pages, because we could not confirm that reuse of the state textbooks is permitted. Real pages will be harder.
 * On the harshest simulated captures, 3.6 percent of Tamil characters and 1.6 percent of English characters are still wrong, and some coloured headings and a few question numbers are not recognised as such. The text stays in order, but those headings and questions lose their navigation.
 * One text column only. Pictures and diagrams are not described. Maths is read as plain text. Handwriting is not supported.
-* Speech uses the voices installed on the computer. The macOS Tamil voice is clear; the eSpeak NG fallback on Linux and Windows is robotic and has not been tested by us.
+* Speech uses the voices installed on the computer. The macOS Tamil voice is clear; the eSpeak NG fallback on Linux and Windows is robotic. The hosted demo uses eSpeak NG, which is how we checked that the Linux path works; it has not been tested on Windows.
 * Simplification is English only, optional, and needs a local model that uses about 3.4 GB of memory.
 * Accessibility was checked with automated tools and a scripted keyboard walkthrough, not yet with blind or low-vision students or with a person using VoiceOver or NVDA.
 
@@ -74,7 +75,9 @@ All of Olivaasi's code, documents, evaluation pages, evaluation images and the l
 * Speech: macOS system voices, or eSpeak NG (GPL 3.0, run as a separate program).
 * Optional simplification: Gemma 3 4B (Gemma terms of use) through Ollama (MIT).
 * Development only: axe-core 4.10.2 (MPL 2.0), Google Chrome, pytest.
+* Hosting for the public demo: Modal.
 * Evaluation text: Thirukkural (public domain) and William Wordsworth, "I Wandered Lonely as a Cloud" (1807, public domain). All other sample text, the made-up learner and the logo were created for this project.
+* [AI-ASSISTANCE CREDITS LINE]
 
 ## Screenshots and their alt text
 

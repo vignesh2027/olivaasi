@@ -11,7 +11,11 @@
 <a class="skip" href="#main">Skip to main content</a>
 <header class="bar">
   <p class="brand"><img src="/static/logo.svg" alt="" width="36" height="36"> Olivaasi <span lang="ta">ஒலிவாசி</span></p>
+  {%- if hosted %}
+  <p class="tag">Public demo. Photos are processed in memory and deleted once the page is sent.</p>
+  {%- else %}
   <p class="tag">Works offline. Photos stay on this computer.</p>
+  {%- endif %}
 </header>
 <main id="main" tabindex="-1">
   <h1>Turn a photo of a textbook page into a page you can read or hear</h1>
@@ -88,7 +92,11 @@
 
 </main>
 <footer class="foot">
+  {%- if hosted %}
+  <p>Olivaasi {{ version }} public demo. Text recognition by Tesseract with the Tamil and English models. Speech on this demo is eSpeak NG, the Linux fallback, which sounds robotic; on a Mac, Olivaasi uses the much clearer Tamil voice Vani. Nothing you upload is stored or logged. Recognised text can contain mistakes.</p>
+  {%- else %}
   <p>Olivaasi {{ version }}. Text recognition by Tesseract. Speech by the voices installed on this computer. Recognised text can contain mistakes.</p>
+  {%- endif %}
 </footer>
 <script>
 document.querySelectorAll("form[data-busy]").forEach(function (f) {

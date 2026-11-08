@@ -92,3 +92,26 @@ def test_tamil_paragraphs_are_not_simplified_by_default(work, sample_image, monk
     monkeypatch.setattr(simplify, "simplify", lambda *a, **k: (_ for _ in ()).throw(AssertionError("must not be called")))
     r = pipeline.convert(sample_image, work / "t", audio=False, simplified=True)
     assert any("Tamil paragraph" in n for n in r.notes)
+
+
+@needs_ocr
+def test_hosted_mode_keeps_nothing(work, sample_image, monkeypatch, tmp_path):
+    from olivaasi import server
+
+    scratch = tmp_path / "scratch"
+    scratch.mkdir()
+    monkeypatch.setattr(server, "HOSTED", True)
+    monkeypatch.setattr(server.tempfile, "tempdir", str(scratch))
+    c = TestClient(server.app)
+    home = c.get("/").text
+    assert "Public demo" in home and "eSpeak NG" in home
+    with open(sample_image, "rb") as f:
+        r = c.post("/convert", files={"photo": ("page.jpg", f, "image/jpeg")}, data={"lang": "tam+eng"}, follow_redirects=False)
+    assert r.status_code == 200 and r.headers["cache-control"] == "no-store"
+    assert "நீர்ச் சுழற்சி" in r.text and 'src="data:image/jpeg;base64,' in r.text and 'id="save-page"' in r.text
+    assert "deleted as soon as this page was sent" in r.text
+    assert list(scratch.iterdir()) == []  # the temporary folder is gone
+    assert not (work / "work").exists() or list((work / "work").iterdir()) == []
+    assert c.get("/doc/0123456789ab/").status_code == 404
+    r = c.post("/convert", files={"photo": ("broken.jpg", b"not really a jpeg", "image/jpeg")})
+    assert r.status_code == 400 and list(scratch.iterdir()) == []

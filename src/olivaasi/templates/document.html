@@ -22,7 +22,11 @@
   {%- if app_nav %}
   <nav aria-label="Olivaasi">
     <a href="/">Convert another page</a>
+    {%- if hosted %}
+    <a href="#" id="save-page" download="olivaasi-page.html">Download this page for offline use</a>
+    {%- else %}
     <a href="download">Download this page for offline use</a>
+    {%- endif %}
   </nav>
   {%- endif %}
 </header>
@@ -131,7 +135,11 @@
     {%- endif %}
     <details>
       <summary>About this page</summary>
+      {%- if hosted %}
+      <p>Made by the Olivaasi {{ version }} public demo on {{ made_on }}. The photo was processed in memory and deleted as soon as this page was sent; nothing was kept on the server. Installed on a laptop, Olivaasi needs no internet connection.</p>
+      {%- else %}
       <p>Made by Olivaasi {{ version }} on {{ made_on }}, entirely on this computer, with no internet connection needed.</p>
+      {%- endif %}
       <p>Text recognition: Tesseract, language setting {{ langs_label }}. Average word confidence {{ "%.0f"|format(confidence) }} out of 100.{% if voice_note %} Speech: {{ voice_note }}.{% endif %}</p>
       {%- if notes %}
       <ul>{% for n in notes %}<li>{{ n }}</li>{% endfor %}</ul>
@@ -140,5 +148,16 @@
   </div>
 </main>
 <script>{{ js | safe }}</script>
+{%- if hosted %}
+<script>
+document.getElementById("save-page").addEventListener("click", function (e) {
+  var copy = document.documentElement.cloneNode(true);
+  var nav = copy.querySelector("header nav");
+  if (nav) nav.remove();
+  var blob = new Blob(["<!doctype html>\n" + copy.outerHTML], {type: "text/html"});
+  this.href = URL.createObjectURL(blob);
+});
+</script>
+{%- endif %}
 </body>
 </html>

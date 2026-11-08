@@ -4,6 +4,10 @@ Olivaasi turns a photo of a printed Tamil or English textbook page into a page a
 
 It is built for students who are blind, have low vision or find dense print hard to read, in schools where the accessible edition of a page is not on the computer in front of them. See [DESIGN.md](DESIGN.md) for the learner and the problem, and [EVALUATION.md](EVALUATION.md) for measured accuracy, speed and accessibility results and their limits.
 
+**Live demo:** https://applemacbook6sep2004--olivaasi.us-east.modal.run
+
+The demo runs on one small Modal container that sleeps when idle, so the first conversion after a quiet spell takes longer (about 15 seconds; later ones about 8). Use a sample button or upload your own photo. Each photo is converted in memory (a RAM-backed temporary folder), the page comes back with its audio and photo inside it, and the folder is deleted before the reply is sent: nothing is stored or logged. The demo runs on Linux, so its speech is eSpeak NG, which is robotic; on a Mac Olivaasi uses the much clearer Tamil voice Vani. The optional simplifier is off on the demo.
+
 ![A Tamil science page in Olivaasi, with the sentence being read highlighted](docs/screenshots/02-page-tamil-reading-along.png)
 
 ## What it does
@@ -32,7 +36,7 @@ uv run olivaasi doctor
 
 `doctor` should report Tesseract, the `tam` and `eng` models, and a Tamil voice. On macOS the Tamil voice is "Vani". If it is missing, add it in System Settings, Accessibility, Spoken Content, System voice, Manage Voices, Tamil.
 
-On Debian or Ubuntu, install `tesseract-ocr` and `espeak-ng` with apt instead of the brew step. This path has not been tested yet.
+On Debian or Ubuntu, install `tesseract-ocr`, `espeak-ng` and `ffmpeg` with apt instead of the brew step. The hosted demo runs this path on Debian (see `modal_app.py`); a Linux desktop install has not been tested.
 
 ## Use
 
@@ -80,13 +84,17 @@ uv run python scripts/screenshots.py
 
 To regenerate the evaluation images (also needs Chrome): `uv run python scripts/make_pages.py`.
 
+## Hosted demo
+
+`modal_app.py` deploys the demo with `modal deploy modal_app.py`: half a CPU, 1 GB, scale to zero, Tesseract with the same tessdata_best models, eSpeak NG and ffmpeg, and `OLIVAASI_HOSTED=1`. In hosted mode `/convert` and `/sample` return one self-contained page (audio and photo as data URIs), `TMPDIR` is `/dev/shm`, the temporary folder is deleted before the reply, and the stored-page routes return 404.
+
 ## Limitations
 
 * Tested on typeset pages and simulated photos and camera captures, not on real textbook pages (see EVALUATION.md for why).
 * One text column. Two-column pages are read across both columns.
 * Pictures, diagrams and handwriting are not described. Mathematical notation is read as plain text.
 * On the harshest photos some coloured headings and question numbers are not recognised as such; the text stays in order.
-* Speech quality depends on the voices installed on the computer. The Linux and Windows path (eSpeak NG) is untested.
+* Speech quality depends on the voices installed on the computer. The eSpeak NG voice used on Linux, Windows and the hosted demo is robotic. Windows is untested.
 * Not yet tested with blind or low-vision students, or by a person using a screen reader.
 
 ## Credits

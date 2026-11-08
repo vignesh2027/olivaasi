@@ -30,6 +30,7 @@ class Result:
     notes: list[str] = field(default_factory=list)
     audio_file: str | None = None
     confidence: float = 0.0
+    hosted_html: str | None = None
 
 
 @dataclass
@@ -140,12 +141,13 @@ def speech_clips(doc: structure.Document, simple: bool = False) -> list[tuple[in
 
 def render(doc: structure.Document, *, app_nav: bool, audio_file: str | None, timings: dict[int, tts.Timing],
            original_file: str | None, confidence: float, langs: str, notes: list[str], voice_note: str,
-           audio_file_s: str | None = None, timings_s: dict[int, tts.Timing] | None = None) -> str:
+           audio_file_s: str | None = None, timings_s: dict[int, tts.Timing] | None = None, hosted: bool = False) -> str:
     static = config.PACKAGE_DIR / "static"
     return _env.get_template("document.html").render(
         doc=doc,
         has_h1=any(b.kind == "heading" and b.level == 1 for b in doc.blocks),
         app_nav=app_nav,
+        hosted=hosted,
         audio_file=audio_file,
         timings=timings,
         audio_file_s=audio_file_s,
@@ -164,9 +166,13 @@ def render(doc: structure.Document, *, app_nav: bool, audio_file: str | None, ti
     )
 
 
-def convert(image_path: Path, out_dir: Path, langs: str = "tam+eng", audio: bool = True, simplified: bool = False) -> Result:
+def convert(image_path: Path, out_dir: Path, langs: str = "tam+eng", audio: bool = True, simplified: bool = False,
+            hosted: bool = False) -> Result:
     """Run the whole pipeline and write index.html (standalone), view.html (with app links),
-    audio.m4a or audio.wav, original.jpg, text.txt and doc.json into out_dir."""
+    audio.m4a or audio.wav, original.jpg, text.txt and doc.json into out_dir.
+
+    With hosted=True the result also carries one self-contained page with the audio and
+    photo embedded, so the hosted demo can delete out_dir as soon as it has the page."""
     out_dir.mkdir(parents=True, exist_ok=True)
     start = time.perf_counter()
     image = preprocess.load(image_path)
@@ -212,6 +218,12 @@ def convert(image_path: Path, out_dir: Path, langs: str = "tam+eng", audio: bool
     (out_dir / "index.html").write_text(render(doc, app_nav=False, **common), encoding="utf-8")
     (out_dir / "view.html").write_text(render(doc, app_nav=True, **common), encoding="utf-8")
     (out_dir / "text.txt").write_text(doc.plain_text() + "\n", encoding="utf-8")
+    hosted_html = None
+    if hosted:
+        embedded = dict(common, audio_file=_data_uri(out_dir / audio_file) if audio_file else None,
+                        audio_file_s=_data_uri(out_dir / audio_file_s) if audio_file_s else None,
+                        original_file=_data_uri(original))
+        hosted_html = render(doc, app_nav=True, hosted=True, **embedded)
     stage["render"] = time.perf_counter() - t
     stage["total"] = time.perf_counter() - start
     meta = {
@@ -226,7 +238,22 @@ def convert(image_path: Path, out_dir: Path, langs: str = "tam+eng", audio: bool
         "blocks": [_block_json(b) for b in doc.blocks],
     }
     (out_dir / "doc.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
-    return Result(doc=doc, out_dir=out_dir, timings=stage, notes=notes, audio_file=audio_file, confidence=conf)
+    return Result(doc=doc, out_dir=out_dir, timings=stage, notes=notes, audio_file=audio_file, confidence=conf,
+                  hosted_html=hosted_html)
+
+
+def _data_uri(path: Path) -> str | None:
+    if not path.exists():
+        return None
+    kind = {".m4a": "audio/mp4", ".wav": "audio/wav", ".jpg": "image/jpeg"}[path.suffix]
+    return f"data:{kind};base64," + base64.b64encode(path.read_bytes()).decode()
+
+
+def _data_uri(path: Path) -> str | None:
+    if not path.exists():
+        return None
+    kind = {".m4a": "audio/mp4", ".wav": "audio/wav", ".jpg": "image/jpeg"}[path.suffix]
+    return f"data:{kind};base64," + base64.b64encode(path.read_bytes()).decode()
 
 
 def _block_json(b: structure.Block) -> dict:
