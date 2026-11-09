@@ -57,7 +57,7 @@ All of Olivaasi's code, documents, evaluation pages, evaluation images and the l
 * Try it live: https://applemacbook6sep2004--olivaasi.us-east.modal.run (press a sample button, or upload a photo; the first conversion after a quiet spell takes about 15 seconds). Photos are converted in memory and deleted before the page is sent; nothing is stored or logged. The demo runs on Linux, so its speech is the robotic eSpeak NG fallback rather than the macOS Tamil voice.
 * Source code: [GITHUB REPO LINK]. Setup on macOS takes a few commands; the app then runs at http://127.0.0.1:8765/ with no internet.
 * Sample pages are built in, so no photo and no personal information are needed to try it.
-* Recorded walkthrough: [YOUTUBE LINK] (script below; the script is also the transcript).
+* Recorded walkthrough: https://youtu.be/hOt6Dk08exE (script below; the script is also the transcript).
 
 ## Limitations
 
