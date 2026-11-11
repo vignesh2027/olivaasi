@@ -4,9 +4,9 @@ Olivaasi turns a photo of a printed Tamil or English textbook page into a page a
 
 It is built for students who are blind, have low vision or find dense print hard to read, in schools where the accessible edition of a page is not on the computer in front of them. See [DESIGN.md](DESIGN.md) for the learner and the problem, and [EVALUATION.md](EVALUATION.md) for measured accuracy, speed and accessibility results and their limits.
 
-**Live demo:** https://applemacbook6sep2004--olivaasi.us-east.modal.run
+**Live demo:** https://olivaasi.140-245-16-129.sslip.io
 
-The demo runs on one small Modal container that sleeps when idle, so the first conversion after a quiet spell takes longer (about 15 seconds; later ones about 8). Use a sample button or upload your own photo. Each photo is converted in memory (a RAM-backed temporary folder), the page comes back with its audio and photo inside it, and the folder is deleted before the reply is sent: nothing is stored or logged. The demo runs on Linux, so its speech is eSpeak NG, which is robotic; on a Mac Olivaasi uses the much clearer Tamil voice Vani. The optional simplifier is off on the demo.
+The demo runs in one small container on an Oracle Cloud Always Free VM; a sample page with audio took about 12 seconds when checked on 11 Nov 2026. Use a sample button or upload your own photo. Each photo is converted in memory (a RAM-backed temporary folder), the page comes back with its audio and photo inside it, and the folder is deleted before the reply is sent: nothing is stored or logged. The demo runs on Linux, so its speech is eSpeak NG, which is robotic; on a Mac Olivaasi uses the much clearer Tamil voice Vani. The optional simplifier is off on the demo.
 
 ![A Tamil science page in Olivaasi, with the sentence being read highlighted](docs/screenshots/02-page-tamil-reading-along.png)
 

@@ -54,7 +54,7 @@ All of Olivaasi's code, documents, evaluation pages, evaluation images and the l
 
 ## Try it
 
-* Try it live: https://applemacbook6sep2004--olivaasi.us-east.modal.run (press a sample button, or upload a photo; the first conversion after a quiet spell takes about 15 seconds). Photos are converted in memory and deleted before the page is sent; nothing is stored or logged. The demo runs on Linux, so its speech is the robotic eSpeak NG fallback rather than the macOS Tamil voice.
+* Try it live: https://olivaasi.140-245-16-129.sslip.io (press a sample button, or upload a photo). Photos are converted in memory and deleted before the page is sent; nothing is stored or logged. The demo runs on Linux, so its speech is the robotic eSpeak NG fallback rather than the macOS Tamil voice.
 * Source code: [GITHUB REPO LINK]. Setup on macOS takes a few commands; the app then runs at http://127.0.0.1:8765/ with no internet.
 * Sample pages are built in, so no photo and no personal information are needed to try it.
 * Recorded walkthrough: https://youtu.be/hOt6Dk08exE (script below; the script is also the transcript).
@@ -75,7 +75,7 @@ All of Olivaasi's code, documents, evaluation pages, evaluation images and the l
 * Speech: macOS system voices, or eSpeak NG (GPL 3.0, run as a separate program).
 * Optional simplification: Gemma 3 4B (Gemma terms of use) through Ollama (MIT).
 * Development only: axe-core 4.10.2 (MPL 2.0), Google Chrome, pytest.
-* Hosting for the public demo: Modal.
+* Hosting for the public demo: an Oracle Cloud Always Free VM (Docker behind Caddy); `modal_app.py` is kept as an alternative host.
 * Evaluation text: Thirukkural (public domain) and William Wordsworth, "I Wandered Lonely as a Cloud" (1807, public domain). All other sample text, the made-up learner and the logo were created for this project.
 * [AI-ASSISTANCE CREDITS LINE]
 
