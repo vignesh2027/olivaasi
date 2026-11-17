@@ -27,7 +27,7 @@ You need [Homebrew](https://brew.sh) and [uv](https://docs.astral.sh/uv/). Inter
 
 ```sh
 brew install tesseract
-git clone <this repository> olivaasi
+git clone https://github.com/vignesh2027/olivaasi olivaasi
 cd olivaasi
 uv sync
 sh scripts/get_models.sh

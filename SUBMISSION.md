@@ -1,10 +1,12 @@
 # Olivaasi: submission material for AccessED Hacks
 
-Text for the Devpost form, ready to paste. Figures come from EVALUATION.md and `eval/results.md`; check them again if the code changes. The AI-assistance credit line is added at submission time (placeholder at the end of Credits).
+Text for the Devpost form, ready to paste. Figures come from EVALUATION.md and `eval/results.md`; check them again if the code changes.
 
 ## Name
 
 Olivaasi (ஒலிவாசி)
+
+Team: Vigneshwar L (solo), final-year CSE student, Takshashila University, Chennai.
 
 ## Short pitch
 
@@ -55,7 +57,7 @@ All of Olivaasi's code, documents, evaluation pages, evaluation images and the l
 ## Try it
 
 * Try it live: https://olivaasi.140-245-16-129.sslip.io (press a sample button, or upload a photo). Photos are converted in memory and deleted before the page is sent; nothing is stored or logged. The demo runs on Linux, so its speech is the robotic eSpeak NG fallback rather than the macOS Tamil voice.
-* Source code: [GITHUB REPO LINK]. Setup on macOS takes a few commands; the app then runs at http://127.0.0.1:8765/ with no internet.
+* Source code: https://github.com/vignesh2027/olivaasi. Setup on macOS takes a few commands; the app then runs at http://127.0.0.1:8765/ with no internet.
 * Sample pages are built in, so no photo and no personal information are needed to try it.
 * Recorded walkthrough: https://youtu.be/hOt6Dk08exE (script below; the script is also the transcript).
 
@@ -77,7 +79,7 @@ All of Olivaasi's code, documents, evaluation pages, evaluation images and the l
 * Development only: axe-core 4.10.2 (MPL 2.0), Google Chrome, pytest.
 * Hosting for the public demo: an Oracle Cloud Always Free VM (Docker behind Caddy); `modal_app.py` is kept as an alternative host.
 * Evaluation text: Thirukkural (public domain) and William Wordsworth, "I Wandered Lonely as a Cloud" (1807, public domain). All other sample text, the made-up learner and the logo were created for this project.
-* [AI-ASSISTANCE CREDITS LINE]
+* AI assistance: the code and documentation were written with help from AI coding assistants (Claude Code). I directed the work, reviewed it and ran the tests myself. The demo video narration is synthetic speech (Kokoro 82M text to speech, voice af_heart), not my own voice. The optional English simplification uses the Gemma 3 4B model running locally. The video was recorded before the demo moved hosts, so its on-screen labels and closing card show an old Modal address; the working demo is the link under Try it.
 
 ## Screenshots and their alt text
 
